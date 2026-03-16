@@ -1,0 +1,568 @@
+/* ===============================================================
+   DATA DIRI - PROFILE PAGE STYLES (v2 - Professional Redesign)
+   Palette: Deep Teal + Slate + Warm Accent
+   =============================================================== */
+
+/* PAGE HEADER */
+.page-header {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  border-left: 4px solid #0f766e;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+}
+.page-header h1 {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+.page-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+/* ===== CSS VARIABLES ===== */
+:root {
+  --teal-900: #0d4f4f;
+  --teal-700: #0f766e;
+  --teal-500: #14b8a6;
+  --teal-400: #2dd4bf;
+  --teal-100: #ccfbf1;
+  --teal-50:  #f0fdfa;
+
+  --slate-900: #0f172a;
+  --slate-700: #334155;
+  --slate-500: #64748b;
+  --slate-300: #cbd5e1;
+  --slate-100: #f1f5f9;
+  --slate-50:  #f8fafc;
+
+  --amber-500: #f59e0b;
+  --amber-100: #fef3c7;
+
+  --red-500:   #ef4444;
+  --blue-600:  #2563eb;
+  --blue-100:  #dbeafe;
+
+  --white: #ffffff;
+
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+  --shadow-lg:  0 10px 32px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-teal: 0 8px 24px rgba(15,118,110,0.25);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===================================================
+   PROFILE SECTION WRAPPER
+   =================================================== */
+.profile-section {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 0;
+  box-shadow: var(--shadow-lg);
+  animation: fadeInUp 0.5s ease forwards;
+  overflow: hidden;
+}
+
+/* ===================================================
+   PROFILE HEADER CARD
+   =================================================== */
+.profile-header-card {
+  display: flex;
+  gap: 36px;
+  padding: 36px 36px 32px;
+  align-items: flex-start;
+  background: linear-gradient(135deg, var(--teal-900) 0%, var(--teal-700) 60%, var(--teal-500) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-header-card::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+}
+.profile-header-card::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; right: 140px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+
+/* Avatar */
+.profile-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  z-index: 1;
+}
+
+.profile-avatar {
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal-400) 0%, var(--teal-500) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 52px; color: var(--white);
+  box-shadow: 0 0 0 5px rgba(255,255,255,0.15), var(--shadow-lg);
+  overflow: hidden;
+  border: 3px solid rgba(255,255,255,0.25);
+}
+
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.btn-change-photo {
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-radius: var(--radius-full);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: var(--transition);
+  display: flex; align-items: center; gap: 6px;
+  color: var(--white);
+  backdrop-filter: blur(8px);
+  letter-spacing: 0.3px;
+}
+
+.btn-change-photo:hover {
+  background: rgba(255,255,255,0.28);
+  border-color: rgba(255,255,255,0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Header Info */
+.profile-header-info { flex: 1; z-index: 1; padding-top: 8px; }
+
+.profile-header-info h2 {
+  margin: 0 0 6px 0;
+  font-size: 26px; font-weight: 700;
+  color: var(--white); letter-spacing: -0.3px;
+}
+
+.profile-username {
+  margin: 0 0 18px 0;
+  color: rgba(255,255,255,0.7);
+  font-size: 15px; font-weight: 500;
+}
+
+.profile-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ===================================================
+   BADGES
+   =================================================== */
+.badge {
+  padding: 7px 14px;
+  border-radius: var(--radius-full);
+  font-size: 12px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 6px;
+  letter-spacing: 0.2px;
+}
+
+.badge-primary {
+  background: rgba(255,255,255,0.18);
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,0.3);
+  backdrop-filter: blur(8px);
+}
+
+.badge-success {
+  background: rgba(45,212,191,0.2);
+  color: var(--teal-100);
+  border: 1px solid rgba(45,212,191,0.3);
+}
+
+/* ===================================================
+   Flatpickr
+   =================================================== */
+.flatpickr-calendar { border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); border: none; }
+.flatpickr-months { background: #0f766e; border-radius: 12px 12px 0 0; }
+.flatpickr-month,
+.flatpickr-current-month,
+.flatpickr-current-month .cur-month,
+.flatpickr-current-month input.cur-year { color: white; }
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover { background: #0f766e; border-color: #0f766e; }
+.flatpickr-day:hover { background: #f0fdfa; border-color: #14b8a6; color: #0f766e; }
+.flatpickr-day.today { border-color: #14b8a6; color: #0f766e; font-weight: 700; }
+.flatpickr-prev-month svg,
+.flatpickr-next-month svg { fill: white; }
+
+/* ===================================================
+   BODY
+   =================================================== */
+.profile-body { padding: 32px 36px 36px; }
+
+/* ===================================================
+   EDIT MODE BAR
+   =================================================== */
+.edit-mode-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 36px 0;
+  margin: 24px 0 0;
+}
+
+.btn-edit {
+  padding: 11px 22px;
+  background: var(--teal-700); color: var(--white);
+  border: none; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: var(--transition);
+  display: inline-flex; align-items: center; gap: 8px;
+  box-shadow: var(--shadow-teal); letter-spacing: 0.2px;
+}
+
+.btn-edit:hover {
+  background: var(--teal-900);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(15,118,110,0.35);
+}
+
+/* ===================================================
+   FORM SECTION
+   =================================================== */
+.profile-form { padding: 24px 36px 36px; }
+
+.form-section {
+  margin-bottom: 28px;
+  padding: 26px 28px;
+  background: var(--slate-50);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--slate-300);
+  transition: var(--transition);
+}
+
+.form-section:hover {
+  border-color: var(--teal-400);
+  box-shadow: 0 0 0 3px rgba(20,184,166,0.07);
+}
+
+.form-section.section-instansi {
+  background: linear-gradient(135deg, #fffbeb 0%, #fff 100%);
+  border-color: #fde68a;
+}
+
+.form-section.section-instansi:hover {
+  border-color: var(--amber-500);
+  box-shadow: 0 0 0 3px rgba(245,158,11,0.08);
+}
+
+/* Section Title */
+.section-title {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 16px; font-weight: 700; color: var(--slate-900);
+  margin-bottom: 22px; padding-bottom: 14px;
+  border-bottom: 2px solid var(--slate-300);
+  letter-spacing: -0.1px;
+}
+
+.section-title i {
+  color: var(--teal-700); font-size: 18px;
+  width: 36px; height: 36px;
+  background: var(--teal-100);
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm);
+}
+
+.section-instansi .section-title i { color: var(--amber-500); background: var(--amber-100); }
+
+/* ===================================================
+   FORM GRID & GROUPS
+   =================================================== */
+.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+
+.form-group { display: flex; flex-direction: column; }
+.form-group.full-width { grid-column: 1 / -1; }
+
+.form-group label {
+  margin-bottom: 7px;
+  font-weight: 600; color: var(--slate-700);
+  display: flex; align-items: center; gap: 4px;
+  letter-spacing: 0.1px;
+  text-transform: uppercase; font-size: 11.5px;
+}
+
+.required { color: var(--red-500); font-weight: 700; }
+
+/* ===================================================
+   FORM CONTROLS
+   =================================================== */
+.form-control {
+  padding: 12px 15px;
+  border: 1.5px solid var(--slate-300);
+  border-radius: var(--radius-sm);
+  font-size: 14px; transition: var(--transition);
+  font-family: inherit; color: var(--slate-900);
+  background: var(--white); line-height: 1.5;
+}
+
+.form-control.editable { border-color: var(--teal-500); background: #f0fdfa; }
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--teal-700);
+  box-shadow: 0 0 0 3px rgba(15,118,110,0.12);
+  background: var(--white);
+}
+
+.form-control:read-only,
+.form-control:disabled {
+  background: var(--slate-100);
+  cursor: not-allowed;
+  border-color: var(--slate-300);
+  color: var(--slate-500);
+}
+
+textarea.form-control { resize: vertical; min-height: 88px; line-height: 1.6; }
+select.form-control { cursor: pointer; }
+
+/* ===================================================
+   FORM HINTS
+   =================================================== */
+.form-hint {
+  margin-top: 5px; font-size: 11.5px; font-weight: 500;
+  display: flex; align-items: center; gap: 4px;
+  color: var(--slate-500);
+}
+.form-hint i { font-size: 11px; }
+.form-hint.edit-hint   { color: var(--slate-400); }
+.form-hint.readonly-hint { color: var(--slate-400); }
+body.edit-mode .form-hint.edit-hint { color: var(--teal-700); }
+
+/* ===================================================
+   INFO BOX
+   =================================================== */
+.info-box {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px;
+  background: var(--blue-100); border-radius: var(--radius-sm);
+  border-left: 4px solid var(--blue-600); color: var(--blue-600);
+}
+.info-box i { font-size: 18px; flex-shrink: 0; }
+.info-box strong { margin-right: 4px; }
+
+/* ===================================================
+   KELOMPOK INFO
+   =================================================== */
+.kelompok-info { display: flex; flex-direction: column; gap: 18px; }
+
+.kelompok-item {
+  background: var(--white); padding: 18px 20px;
+  border-radius: var(--radius-md); border: 1.5px solid var(--slate-300);
+  transition: var(--transition);
+}
+.kelompok-item:hover { border-color: var(--teal-400); box-shadow: var(--shadow-sm); }
+
+.kelompok-label {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; color: var(--slate-700);
+  margin-bottom: 12px; font-size: 14px;
+}
+.kelompok-label i { color: var(--teal-700); }
+
+.kelompok-value { padding-left: 28px; }
+.kelompok-value strong { color: var(--slate-900); font-size: 15px; }
+
+.kelompok-list { display: flex; flex-direction: column; gap: 8px; padding-left: 28px; }
+
+.anggota-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px;
+  background: var(--slate-50); border-radius: var(--radius-sm);
+  border: 1px solid var(--slate-300); transition: var(--transition);
+}
+.anggota-item:hover { background: var(--teal-50); border-color: var(--teal-400); transform: translateX(4px); }
+
+.anggota-number { font-weight: 700; color: var(--teal-700); min-width: 22px; font-size: 13px; }
+.anggota-name { color: var(--slate-700); font-weight: 500; font-size: 14px; }
+.text-muted { color: var(--slate-400); font-style: italic; }
+
+/* ===================================================
+   FORM ACTIONS
+   =================================================== */
+.form-actions {
+  display: flex; justify-content: flex-end; gap: 12px;
+  padding-top: 24px; margin-top: 24px;
+  border-top: 2px solid var(--slate-300);
+}
+
+.btn {
+  padding: 12px 26px; border: none; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 600; cursor: pointer; transition: var(--transition);
+  display: inline-flex; align-items: center; gap: 8px; letter-spacing: 0.2px;
+}
+
+.btn-secondary { background: var(--slate-100); color: var(--slate-700); border: 1.5px solid var(--slate-300); }
+.btn-secondary:hover { background: var(--slate-300); color: var(--slate-900); border-color: var(--slate-500); }
+
+.btn-primary { background: var(--teal-700); color: var(--white); box-shadow: var(--shadow-teal); }
+.btn-primary:hover { background: var(--teal-900); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(15,118,110,0.35); }
+.btn:active { transform: translateY(0) !important; }
+
+/* ===================================================
+   EDIT MODE
+   =================================================== */
+body.edit-mode::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--teal-900), var(--teal-500), var(--teal-400), var(--teal-500), var(--teal-900));
+  background-size: 300% 100%;
+  animation: shimmer 2.5s linear infinite;
+  z-index: 9999;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 0% 0; }
+  100% { background-position: 300% 0; }
+}
+
+body.edit-mode .form-control.editable[readonly] { background: var(--white); border-color: var(--teal-500); cursor: text; }
+body.edit-mode .form-control.editable { background: #f0fdfa; border-color: var(--teal-500); }
+
+/* ===================================================
+   EDIT MODE BANNER
+   =================================================== */
+.edit-mode-banner {
+  position: fixed; top: 80px; right: 20px;
+  background: var(--teal-700); color: var(--white);
+  padding: 12px 20px; border-radius: var(--radius-md);
+  box-shadow: var(--shadow-teal); z-index: 1000;
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 600; font-size: 14px;
+  animation: slideInRight 0.3s cubic-bezier(0.4,0,0.2,1);
+  border-left: 4px solid var(--teal-400);
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(80px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.edit-mode-banner i { animation: pulseBanner 1.8s ease-in-out infinite; color: var(--teal-400); }
+
+@keyframes pulseBanner {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.25); opacity: 0.8; }
+}
+
+/* ===================================================
+   ANIMATIONS
+   =================================================== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===================================================
+   RESPONSIVE
+   =================================================== */
+@media (max-width: 992px) { .form-grid { grid-template-columns: 1fr; } }
+
+@media (max-width: 768px) {
+  .profile-header-card { flex-direction: column; align-items: center; text-align: center; padding: 28px 24px; }
+  .profile-avatar { width: 110px; height: 110px; font-size: 44px; }
+  .profile-header-info h2 { font-size: 22px; }
+  .profile-badges { justify-content: center; }
+  .profile-body { padding: 24px 20px 28px; }
+  .profile-form { padding: 20px 20px 28px; }
+  .form-section { padding: 20px 18px; }
+  .edit-mode-bar { padding: 0 20px; justify-content: center; }
+  .form-actions { flex-direction: column-reverse; gap: 10px; }
+  .btn { width: 100%; justify-content: center; }
+  .edit-mode-banner { top: 70px; right: 10px; font-size: 13px; padding: 10px 15px; }
+}
+
+/* ===================================================
+   PASSWORD SECTION
+   =================================================== */
+
+/* Wrapper input + tombol mata */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper .form-control {
+  padding-right: 44px; /* ruang untuk tombol mata */
+  width: 100%;
+}
+
+.btn-toggle-password {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 42px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--slate-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  transition: var(--transition);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.btn-toggle-password:hover {
+  color: var(--teal-700);
+  background: rgba(15,118,110,0.06);
+}
+
+/* Hanya aktif saat mode edit password */
+.password-field:disabled + .btn-toggle-password { pointer-events: none; opacity: 0.4; }
+.password-field:not(:disabled) + .btn-toggle-password { pointer-events: auto; opacity: 1; }
+
+/* Indikator kekuatan */
+.password-strength-wrapper {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.password-strength-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--slate-200);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.password-strength-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease, background-color 0.4s ease;
+}
+
+.password-strength-fill.strength-weak   { background: #ef4444; }
+.password-strength-fill.strength-medium { background: #f59e0b; }
+.password-strength-fill.strength-strong { background: #22c55e; }
+
+.password-strength-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--slate-500);
+  min-width: 90px;
+  text-align: right;
+}

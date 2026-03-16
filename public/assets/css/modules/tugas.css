@@ -1,0 +1,1381 @@
+/* =============================================================================
+ * TUGAS.CSS
+ * CSS Terpusat untuk Modul Manajemen Tugas - Penugasan
+ * Mencakup: main_penugasan, kategori_tugas, tugas, tugas_tambah, tugas_sasaran
+ * ============================================================================= */
+
+
+/* =============================================================================
+ * 1. MAIN PENUGASAN — Tab Navigation & Loading Overlay
+ * ============================================================================= */
+
+.tab-navigation {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-2xl);
+    background: var(--bg-white);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: var(--space-lg) var(--space-2xl);
+    border-radius: var(--radius-lg);
+    background: var(--bg-main);
+    color: var(--text-secondary);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    border: 2px solid transparent;
+}
+
+.tab-btn:hover {
+    background: var(--bg-gray);
+    color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    color: var(--text-white);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+}
+
+.tab-btn i {
+    font-size: var(--font-size-xl);
+}
+
+.tab-content-wrapper {
+    background: var(--bg-white);
+    padding: var(--space-2xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    min-height: 500px;
+    position: relative;
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    z-index: var(--z-overlay);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(2px);
+}
+
+.loading-overlay.active {
+    display: flex;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--border-light);
+    border-top-color: var(--primary);
+    border-radius: var(--radius-full);
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+
+/* =============================================================================
+ * 2. SHARED — Section Buttons & Tombol Aksi
+ * ============================================================================= */
+
+.section-buttons {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.btn-custom {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-md);
+    cursor: pointer;
+    transition: var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.btn-add {
+    background: var(--primary);
+    color: var(--text-white);
+}
+
+.btn-add:hover:not(:disabled) {
+    background: var(--primary-dark);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.btn-add:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: var(--bg-gray-dark);
+}
+
+.btn-filter-toggle {
+    background: var(--secondary);
+    color: var(--text-white);
+}
+
+.btn-filter-toggle:hover {
+    background: var(--secondary-light);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+/* Inline Search (Kategori Tugas) */
+.inline-search-wrapper {
+    position: relative;
+    flex: 1;
+    max-width: 360px;
+}
+
+.inline-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    pointer-events: none;
+}
+
+.inline-search-input {
+    width: 100%;
+    padding: 9px 14px 9px 34px;
+    border: 2px solid var(--border-medium);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-md);
+    font-family: inherit;
+    transition: var(--transition-base);
+    background: var(--bg-white);
+}
+
+.inline-search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+/* Action Buttons */
+.btn-action {
+    padding: 8px 12px;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition-base);
+    margin-right: var(--space-sm);
+    font-size: var(--font-size-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-action:last-child {
+    margin-right: 0;
+}
+
+.btn-edit { background: var(--accent-yellow); color: #854d0e; }
+.btn-edit:hover { background: var(--accent-yellow-dark); box-shadow: var(--shadow-sm); transform: scale(1.05); }
+
+.btn-delete { background: var(--accent-red); color: var(--text-white); }
+.btn-delete:hover { background: var(--accent-red-dark); box-shadow: var(--shadow-sm); transform: scale(1.05); }
+
+
+/* =============================================================================
+ * 3. SHARED — Filter Section (Kategori & Tugas partial views)
+ * ============================================================================= */
+
+.filter-section {
+    display: none;
+    background: var(--primary-light);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-xl);
+    animation: slideDown 0.3s ease-out;
+    border: 1px solid var(--primary);
+}
+
+.filter-section.show {
+    display: block;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+}
+
+.filter-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin: 0;
+}
+
+.btn-reset {
+    background: var(--bg-gray-dark);
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+    border: none;
+}
+
+.btn-reset:hover { background: var(--border-dark); }
+
+.filter-row-full { margin-bottom: var(--space-lg); }
+
+.filter-row-half {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    font-size: var(--font-size-md);
+}
+
+.filter-group input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-md);
+    transition: var(--transition-base);
+}
+
+.filter-group input:focus {
+    outline: none;
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+/* Select2 override untuk filter */
+.filter-group select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-md);
+    transition: var(--transition-base);
+    font-family: inherit;
+}
+
+.filter-group select:focus {
+    outline: none;
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+
+/* =============================================================================
+ * 4. SHARED — Form Section (Kategori Tugas)
+ * ============================================================================= */
+
+.form-section {
+    display: none;
+    background: var(--primary-light);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-xl);
+    animation: slideDown 0.3s ease-out;
+    border: 1px solid var(--primary);
+}
+
+.form-section.show { display: block; }
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+}
+
+.form-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin: 0;
+}
+
+.form-group { margin-bottom: var(--space-xl); }
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    font-size: var(--font-size-md);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-md);
+    transition: var(--transition-base);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+.required { color: var(--accent-red); }
+
+.radio-group { display: flex; gap: var(--space-xl); }
+
+.radio-option { display: flex; align-items: center; cursor: pointer; }
+
+.radio-option input[type="radio"] {
+    width: auto;
+    margin-right: var(--space-sm);
+    cursor: pointer;
+}
+
+.radio-option label {
+    margin-bottom: 0;
+    cursor: pointer;
+    font-weight: var(--font-weight-normal);
+}
+
+.form-actions { display: flex; gap: var(--space-md); justify-content: flex-end; }
+
+.btn-save {
+    background: var(--primary);
+    color: var(--text-white);
+    padding: 10px 25px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.btn-save:hover {
+    background: var(--primary-dark);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.btn-cancel {
+    background: var(--bg-gray-dark);
+    color: var(--text-secondary);
+    padding: 10px 25px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.btn-cancel:hover { background: var(--border-dark); }
+
+
+/* =============================================================================
+ * 5. SHARED — Table & DataTables Styling
+ * ============================================================================= */
+
+.table-container {
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-light);
+}
+
+table.dataTable thead th {
+    background: var(--primary);
+    color: var(--text-white);
+    font-weight: var(--font-weight-semibold);
+    padding: var(--space-lg);
+    border: none;
+    text-align: center;
+}
+
+table.dataTable tbody td {
+    padding: var(--space-md) var(--space-lg);
+    border-bottom: 1px solid var(--border-light);
+    text-align: center;
+    vertical-align: middle;
+}
+
+table.dataTable tbody tr { transition: var(--transition-base); }
+
+table.dataTable tbody tr:hover {
+    background: var(--primary-light) !important;
+    transform: translateX(2px);
+}
+
+/* Column: nama tugas left-align */
+table.dataTable tbody td:nth-child(3) {
+    text-align: left;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+}
+
+/* Action column no wrap */
+table.dataTable tbody td:last-child { white-space: nowrap; }
+
+/* Hide DataTables Search Box */
+.dataTables_filter { display: none !important; }
+
+/* DataTables Controls */
+.dataTables_wrapper .row:last-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-lg);
+}
+
+.dataTables_length {
+    padding: var(--space-lg) 0;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.dataTables_info {
+    padding: 0;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.dataTables_length select {
+    padding: 6px 30px 6px 10px;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    margin: 0 8px;
+}
+
+.dataTables_paginate { padding: 0; text-align: right; margin: 0; }
+
+.dataTables_paginate .paginate_button {
+    padding: 6px 10px;
+    margin: 0 2px;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    background: var(--bg-white);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition-base);
+    font-size: var(--font-size-sm);
+    display: inline-block;
+    min-width: 35px;
+    text-align: center;
+}
+
+.dataTables_paginate .paginate_button:hover {
+    background: var(--bg-gray);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.dataTables_paginate .paginate_button.current {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: var(--text-white) !important;
+    font-weight: var(--font-weight-semibold);
+}
+
+.dataTables_paginate .paginate_button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.dataTables_paginate .paginate_button.disabled:hover {
+    background: var(--bg-white);
+    border-color: var(--border-medium);
+    color: var(--text-secondary);
+}
+
+.dataTables_processing {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    padding: var(--space-lg) var(--space-2xl);
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 100;
+}
+
+.dataTables_empty {
+    padding: var(--space-3xl) !important;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: var(--font-size-lg);
+}
+
+.dataTables_scroll { overflow-x: auto; }
+
+/* Sorting Icons */
+table.dataTable thead th.sorting,
+table.dataTable thead th.sorting_asc,
+table.dataTable thead th.sorting_desc {
+    cursor: pointer;
+    position: relative;
+    padding-right: 30px;
+    background-image: none !important;
+}
+
+table.dataTable thead th.sorting:after,
+table.dataTable thead th.sorting_asc:after,
+table.dataTable thead th.sorting_desc:after {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+table.dataTable thead th.sorting:after     { content: '\f0dc'; }
+table.dataTable thead th.sorting_asc:after  { content: '\f0de'; }
+table.dataTable thead th.sorting_desc:after { content: '\f0dd'; }
+
+
+/* =============================================================================
+ * 6. SHARED — Select2 Override (Filter & Form)
+ * ============================================================================= */
+
+/* Filter context */
+.select2-container--default .select2-selection--single {
+    height: auto;
+    padding: 9px 12px;
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-md);
+    font-family: inherit;
+    background: var(--bg-white);
+}
+
+.select2-container--default.select2-container--focus .select2-selection--single,
+.select2-container--default.select2-container--open .select2-selection--single {
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+    outline: none;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow { height: 100%; top: 0; right: 8px; }
+.select2-container--default .select2-selection--single .select2-selection__rendered { line-height: normal; padding: 0; color: var(--text-primary); }
+.select2-container--default .select2-selection--single .select2-selection__placeholder { color: var(--text-muted); }
+
+.select2-dropdown {
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lg);
+    font-family: inherit;
+    font-size: var(--font-size-md);
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    font-size: var(--font-size-md);
+    font-family: inherit;
+}
+
+.select2-results__option { padding: 8px 12px; }
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* Form context override (tugas_tambah) */
+.form-group-tugas .select2-container--default .select2-selection--single {
+    padding: var(--space-md);
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+}
+
+.form-group-tugas .select2-container--default.select2-container--focus .select2-selection--single,
+.form-group-tugas .select2-container--default.select2-container--open .select2-selection--single {
+    border-color: var(--primary);
+}
+
+.form-group-tugas .select2-dropdown {
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+}
+
+
+/* =============================================================================
+ * 7. TUGAS TAMBAH — Step Indicator, Form, Sasaran Preview, Bottom Actions
+ * ============================================================================= */
+
+.tambah-tugas-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-2xl);
+    padding-bottom: 40px;
+}
+
+.tambah-header {
+    margin-bottom: var(--space-2xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.btn-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    text-decoration: none;
+    margin-bottom: var(--space-sm);
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: color 0.3s;
+    padding: 0;
+}
+
+.btn-back-link:hover { color: var(--primary); }
+
+.tambah-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin: 0;
+}
+
+.tambah-title i { color: var(--primary); }
+
+/* Step Indicator */
+.step-indicator {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--space-2xl);
+    gap: 0;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex: 1;
+}
+
+.step-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+    flex-shrink: 0;
+    transition: all 0.3s;
+}
+
+.step-circle.active  { background: var(--primary); color: var(--white); box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.2); }
+.step-circle.done    { background: var(--success); color: var(--white); }
+.step-circle.inactive{ background: var(--gray-200); color: var(--text-muted); }
+
+.step-label { font-size: var(--font-size-sm); font-weight: 600; color: var(--text-secondary); }
+.step-label.active { color: var(--primary); }
+.step-label.done   { color: var(--success); }
+
+.step-line { flex: 1; height: 2px; background: var(--gray-200); margin: 0 var(--space-md); }
+.step-line.done { background: var(--success); }
+
+/* Form Section Tugas */
+.form-section-tugas {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    margin-bottom: var(--space-xl);
+}
+
+.form-section-header {
+    background: linear-gradient(135deg, var(--primary) 0%, #14b8a6 100%);
+    padding: var(--space-lg) var(--space-xl);
+}
+
+.form-section-title {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin: 0;
+}
+
+.form-section-body { padding: var(--space-xl); }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+}
+
+.form-group-tugas {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.form-group-tugas.full-width { grid-column: 1 / -1; }
+
+.form-group-tugas label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.form-group-tugas label .required { color: var(--error); }
+
+.form-group-tugas input,
+.form-group-tugas select,
+.form-group-tugas textarea {
+    width: 100%;
+    padding: var(--space-md);
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    transition: all 0.3s;
+    font-family: inherit;
+}
+
+.form-group-tugas input:focus,
+.form-group-tugas select:focus,
+.form-group-tugas textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+.form-group-tugas input.readonly-field {
+    background: var(--gray-100);
+    cursor: not-allowed;
+    color: var(--text-secondary);
+}
+
+.form-group-tugas textarea { min-height: 100px; resize: vertical; }
+
+/* Sasaran Preview */
+.sasaran-preview {
+    background: var(--gray-50);
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.sasaran-preview.has-data {
+    background: #f0fdfa;
+    border-color: var(--primary);
+    border-style: solid;
+    text-align: left;
+}
+
+.sasaran-empty-text {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.sasaran-empty-text i { font-size: 32px; color: var(--gray-300); }
+
+.sasaran-summary { display: none; }
+.sasaran-summary.show { display: block; }
+
+.sasaran-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-sm);
+}
+
+.badge-mandiri  { background: #dbeafe; color: #1e40af; }
+.badge-kelompok { background: #fef3c7; color: #92400e; }
+.badge-tim      { background: #f3e8ff; color: #6b21a8; }
+
+.sasaran-count  { font-size: var(--font-size-xl); font-weight: 700; color: var(--primary); }
+
+.sasaran-names {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-top: var(--space-xs);
+    max-height: 80px;
+    overflow-y: auto;
+}
+
+/* Bottom Actions (Tambah) */
+.tambah-actions {
+    background: var(--white);
+    border-top: 2px solid var(--gray-200);
+    padding: var(--space-lg) var(--space-xl);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: var(--radius-lg);
+    margin-top: var(--space-xl);
+}
+
+.btn-tugas {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-xl);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-tugas-back  { background: var(--gray-200); color: var(--text-primary); }
+.btn-tugas-back:hover { background: var(--gray-300); }
+
+.btn-tugas-next  { background: var(--primary); color: var(--white); }
+.btn-tugas-next:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.btn-tugas-next:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+
+/* =============================================================================
+ * 8. TUGAS SASARAN — Container, Tabs, Content, Filter, Table, Tim Form
+ * ============================================================================= */
+
+.sasaran-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-2xl);
+    padding-bottom: 40px;
+}
+
+.sasaran-header { margin-bottom: var(--space-xl); }
+
+.sasaran-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin: 0;
+}
+
+.sasaran-title i { color: var(--primary); }
+
+/* Tab Sasaran */
+.sasaran-tabs {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    background: var(--white);
+    padding: var(--space-md);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.tab-sasaran {
+    flex: 1;
+    padding: var(--space-md) var(--space-lg);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    background: var(--gray-100);
+    color: var(--text-secondary);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.tab-sasaran:hover { background: var(--gray-200); color: var(--text-primary); }
+
+.tab-sasaran.active {
+    background: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+}
+
+.tab-sasaran .tab-count {
+    background: rgba(255, 255, 255, 0.3);
+    color: inherit;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    font-weight: 700;
+}
+
+.tab-sasaran:not(.active) .tab-count {
+    background: var(--gray-300);
+    color: var(--text-secondary);
+}
+
+/* Content Area */
+.sasaran-content {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.content-section-header {
+    background: linear-gradient(135deg, var(--primary) 0%, #14b8a6 100%);
+    padding: var(--space-lg) var(--space-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content-section-title {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin: 0;
+}
+
+.btn-filter-sasaran {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    transition: all 0.3s;
+}
+
+.btn-filter-sasaran:hover { background: rgba(255, 255, 255, 0.3); }
+
+/* Filter Sasaran */
+.filter-sasaran {
+    display: none;
+    background: #f0fdfa;
+    border-bottom: 1px solid var(--primary);
+    padding: var(--space-lg) var(--space-xl);
+    animation: slideDown 0.3s ease;
+}
+
+.filter-sasaran.show { display: block; }
+
+.filter-sasaran-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-md);
+    align-items: end;
+}
+
+.filter-group-sasaran label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.filter-group-sasaran input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    transition: all 0.3s;
+}
+
+.filter-group-sasaran input:focus {
+    outline: none;
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+.btn-reset-sasaran {
+    padding: 8px 16px;
+    background: var(--gray-200);
+    color: var(--text-secondary);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.btn-reset-sasaran:hover { background: var(--gray-300); }
+
+.content-body { padding: var(--space-xl); }
+
+/* Selected Counter Bar */
+.selected-bar {
+    background: #f0fdfa;
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-md);
+    padding: var(--space-md) var(--space-lg);
+    margin-bottom: var(--space-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.selected-bar-text {
+    font-weight: 600;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.selected-bar-count { font-size: var(--font-size-xl); font-weight: 700; }
+
+.btn-clear-selection {
+    background: var(--gray-200);
+    color: var(--text-secondary);
+    border: none;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-clear-selection:hover { background: var(--accent-red); color: var(--white); }
+
+/* Table Sasaran */
+.table-sasaran { width: 100%; }
+
+.table-sasaran thead th {
+    background: var(--primary);
+    color: var(--white);
+    font-weight: 600;
+    padding: var(--space-md) var(--space-lg);
+    text-align: center;
+}
+
+.table-sasaran thead th:first-child { width: 50px; }
+.table-sasaran thead th:nth-child(2) { width: 50px; }
+
+.table-sasaran tbody td {
+    padding: var(--space-md) var(--space-lg);
+    border-bottom: 1px solid var(--gray-200);
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table-sasaran tbody td.td-name { text-align: left; }
+
+.table-sasaran tbody tr:hover { background: #f0fdfa; cursor: pointer; }
+
+.table-sasaran tbody tr.selected-row { background: #ccfbf1 !important; }
+
+/* Custom Checkbox */
+.custom-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
+
+/* Tim Tugas */
+.tim-actions {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+    justify-content: flex-end;
+}
+
+.btn-buat-tim {
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    padding: var(--space-md) var(--space-xl);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: var(--font-size-base);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    transition: all 0.3s;
+}
+
+.btn-buat-tim:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.form-buat-tim {
+    display: none;
+    background: #f0fdfa;
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-lg);
+    animation: slideDown 0.3s ease;
+}
+
+.form-buat-tim.show { display: block; }
+
+.form-buat-tim-title {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: var(--space-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.form-buat-tim-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.form-buat-tim-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    display: block;
+}
+
+.form-buat-tim-input {
+    width: 100%;
+    padding: var(--space-md);
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    transition: all 0.3s;
+}
+
+.form-buat-tim-input:focus {
+    outline: none;
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+.form-buat-tim-actions {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: flex-end;
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--primary);
+}
+
+.btn-tim-batal {
+    background: var(--gray-200);
+    color: var(--text-primary);
+    border: none;
+    padding: var(--space-md) var(--space-xl);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-tim-batal:hover { background: var(--gray-300); }
+
+.btn-tim-simpan {
+    background: var(--success);
+    color: var(--white);
+    border: none;
+    padding: var(--space-md) var(--space-xl);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    transition: all 0.3s;
+}
+
+.btn-tim-simpan:hover { background: #16a34a; transform: translateY(-2px); }
+
+/* Badge PKL Type */
+.badge-mandiri-sm {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-instansi-sm {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Empty State */
+.empty-state-sasaran {
+    text-align: center;
+    padding: var(--space-3xl);
+    color: var(--text-muted);
+}
+
+.empty-state-sasaran i {
+    font-size: 48px;
+    color: var(--gray-300);
+    margin-bottom: var(--space-md);
+    display: block;
+}
+
+/* Bottom Actions (Sasaran) */
+.sasaran-actions {
+    background: var(--white);
+    border-top: 2px solid var(--gray-200);
+    padding: var(--space-lg) var(--space-xl);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: var(--radius-lg);
+    margin-top: var(--space-xl);
+}
+
+.btn-sasaran-action {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-xl);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-sasaran-back { background: var(--gray-200); color: var(--text-primary); }
+.btn-sasaran-back:hover { background: var(--gray-300); }
+
+.btn-sasaran-send { background: var(--primary); color: var(--white); }
+.btn-sasaran-send:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.btn-sasaran-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+
+/* =============================================================================
+ * 9. RESPONSIVE
+ * ============================================================================= */
+
+@media (max-width: 768px) {
+    /* Main */
+    .tab-navigation { flex-direction: column; }
+    .tab-btn { padding: var(--space-md) var(--space-lg); }
+    .tab-content-wrapper { padding: var(--space-lg); }
+
+    /* Shared */
+    .section-buttons { flex-wrap: wrap; }
+    .inline-search-wrapper { max-width: 100%; flex: 1 1 100%; order: 1; }
+    .btn-custom { width: 100%; justify-content: center; }
+    .filter-row-half { grid-template-columns: 1fr; }
+
+    .dataTables_length,
+    .dataTables_info,
+    .dataTables_paginate { padding: var(--space-md); text-align: center; }
+    .dataTables_paginate .paginate_button { padding: 4px 8px; font-size: var(--font-size-xs); }
+    .btn-action { padding: 6px 10px; font-size: var(--font-size-sm); }
+
+    /* Tambah */
+    .tambah-tugas-container { padding: var(--space-lg); padding-bottom: 40px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .step-label { display: none; }
+    .tambah-actions { flex-direction: column; gap: var(--space-md); }
+    .btn-tugas { width: 100%; justify-content: center; }
+
+    /* Sasaran */
+    .sasaran-container { padding: var(--space-lg); padding-bottom: 40px; }
+    .sasaran-tabs { flex-direction: column; }
+    .filter-sasaran-grid { grid-template-columns: 1fr; }
+    .form-buat-tim-grid { grid-template-columns: 1fr; }
+    .sasaran-actions { flex-direction: column; gap: var(--space-md); }
+    .btn-sasaran-action { width: 100%; justify-content: center; }
+}
