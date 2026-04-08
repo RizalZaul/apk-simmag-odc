@@ -1,305 +1,296 @@
-<?= $this->extend('layouts/dashboard_layout') ?>
+<?php
 
-<?= $this->section('styles') ?>
-<link rel="stylesheet" href="<?= base_url('assets/css/modules/tugas.css') ?>">
-<?= $this->endSection() ?>
+/**
+ * Views/dashboard_admin/manajemen_tugas/penugasan/tugas_sasaran.php
+ * Wizard Step 2: Pilih Sasaran Tugas
+ */
+?>
 
-<?= $this->section('content') ?>
-<div class="sasaran-container">
-
-    <!-- Header -->
-    <div class="sasaran-header">
-        <button class="btn-back-link" id="btnBackToForm">
-            <i class="fas fa-arrow-left"></i>
-            Kembali ke Form Ketentuan
-        </button>
-        <h1 class="sasaran-title">
-            <i class="fas fa-crosshairs"></i>
-            Pilih Sasaran Tugas
-        </h1>
+<div class="welcome-card mtugas-page-hero">
+    <div>
+        <h2 class="page-heading">Pilih Sasaran Tugas</h2>
+        <p class="page-subheading">Langkah 2: Tentukan siapa yang harus mengerjakan tugas ini</p>
     </div>
+    <a href="<?= base_url('admin/manajemen-tugas/tugas/tambah') ?>" class="btn-mpkl-cancel mtugas-link-reset">
+        <i class="fas fa-arrow-left"></i> Kembali ke Ketentuan
+    </a>
+</div>
 
-    <!-- Step Indicator -->
-    <div class="step-indicator">
-        <div class="step-item">
-            <div class="step-circle done"><i class="fas fa-check" style="font-size:14px"></i></div>
-            <span class="step-label done">Ketentuan Tugas</span>
-        </div>
-        <div class="step-line done"></div>
-        <div class="step-item">
-            <div class="step-circle active">2</div>
-            <span class="step-label active">Pilih Sasaran</span>
-        </div>
+<div class="step-indicator">
+    <div class="step-item">
+        <div class="step-circle done"><i class="fas fa-check"></i></div>
+        <span class="step-label">Ketentuan Tugas</span>
     </div>
+    <div class="step-line done"></div>
+    <div class="step-item">
+        <div class="step-circle active">2</div>
+        <span class="step-label active">Pilih Sasaran</span>
+    </div>
+</div>
 
-    <!-- Tab Navigation -->
-    <div class="sasaran-tabs">
-        <button class="tab-sasaran active" data-tab="mandiri" id="tabMandiri">
-            <i class="fas fa-user"></i>
-            Mandiri
-            <span class="tab-count" id="countMandiri">0</span>
+<div class="mpkl-card mtugas-sasaran-card">
+
+    <!-- ── Tab Nav ── -->
+    <div class="mpkl-tab-nav mtugas-sasaran-tab-nav">
+        <button class="mpkl-tab-btn active" data-target="tab-mandiri" id="tabBtnMandiri">
+            <i class="fas fa-user"></i> Individu
         </button>
-        <button class="tab-sasaran" data-tab="kelompok" id="tabKelompok">
-            <i class="fas fa-users"></i>
-            Kelompok PKL
-            <span class="tab-count" id="countKelompok">0</span>
+        <button class="mpkl-tab-btn" data-target="tab-kelompok">
+            <i class="fas fa-users"></i> Kelompok
         </button>
-        <button class="tab-sasaran" data-tab="tim" id="tabTim">
-            <i class="fas fa-user-friends"></i>
-            Tim Tugas
-            <span class="tab-count" id="countTim">0</span>
+        <button class="mpkl-tab-btn" data-target="tab-tim">
+            <i class="fas fa-user-friends"></i> Tim Tugas
         </button>
     </div>
 
-    <!-- Mode hint — ditampilkan/disembunyikan via JS berdasarkan mode_pengumpulan -->
-    <div id="modeHintBar" style="display:none; margin-bottom:var(--space-md);
-        padding:10px 16px; border-radius:8px; font-size:13px; font-weight:500;">
-    </div>
-
-    <!-- Content Area -->
-    <div class="sasaran-content" id="sasaranContent">
-        <div class="content-section-header">
-            <h3 class="content-section-title" id="contentTitle">
-                <i class="fas fa-user"></i> PKL Mandiri
-            </h3>
-            <button class="btn-filter-sasaran" id="btnFilterSasaran">
-                <i class="fas fa-filter"></i> Filter
-            </button>
-        </div>
-
-        <!-- Filter (hidden by default) -->
-        <div class="filter-sasaran" id="filterSasaran">
-            <div class="filter-sasaran-grid">
-                <div class="filter-group-sasaran">
-                    <label id="filterLabel1"><i class="fas fa-search"></i> Cari Nama</label>
-                    <input type="text" id="filterNamaSasaran" placeholder="Ketik nama...">
+    <!-- ════ TAB: INDIVIDU (MANDIRI) ════ -->
+    <div class="mpkl-tab-content active" id="tab-mandiri">
+        <div class="mtugas-search-strip">
+            <div class="mtugas-filter-toolbar">
+                <div class="mtugas-filter-field">
+                    <input type="text" id="cariMandiri" class="mpkl-input"
+                        placeholder="Cari nama PKL...">
                 </div>
-                <div class="filter-group-sasaran">
-                    <label><i class="fas fa-calendar"></i> Tgl Mulai</label>
-                    <input type="text" id="filterTglMulai" placeholder="dd-mm-yyyy" class="flatpickr-sasaran">
-                </div>
-                <div class="filter-group-sasaran">
-                    <label><i class="fas fa-calendar-check"></i> Tgl Akhir</label>
-                    <input type="text" id="filterTglAkhir" placeholder="dd-mm-yyyy" class="flatpickr-sasaran">
-                </div>
-            </div>
-            <div style="text-align:right; margin-top:var(--space-sm);">
-                <button class="btn-reset-sasaran" id="btnResetFilterSasaran">
-                    <i class="fas fa-redo"></i> Reset Filter
+                <button type="button" class="btn-reset-filter-tim mtugas-search-reset" id="btnResetMandiriSearch">
+                    <i class="fas fa-redo"></i> Reset
                 </button>
             </div>
         </div>
-
-        <!-- Body (Dynamic Content) -->
-        <div class="content-body" id="contentBody">
-            <div style="text-align:center; padding:40px;">
-                <i class="fas fa-spinner fa-spin fa-2x" style="color:var(--primary);"></i>
-                <p style="margin-top:10px; color:var(--text-muted);">Memuat data...</p>
+        <div class="mtugas-mobile-list-wrap" id="mobileMandiriWrap">
+            <div class="mtugas-mobile-list-head">
+                <label class="mtugas-mobile-list-check">
+                    <input type="checkbox" id="checkAllMandiriMobile">
+                </label>
+                <div class="mtugas-mobile-list-name">Nama</div>
+                <div class="mtugas-mobile-list-action">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
             </div>
+            <div class="mtugas-mobile-list-body" id="mobileMandiriList">
+                <div class="mtugas-mobile-list-empty">Memuat data...</div>
+            </div>
+        </div>
+
+        <div class="mtugas-table-shell mtugas-desktop-table">
+            <table class="mpkl-table mtugas-full-table" id="tableMandiri">
+                <thead>
+                    <tr>
+                        <th class="mtugas-check-col"><input type="checkbox" id="checkAllMandiri"></th>
+                        <th>Nama Lengkap</th>
+                        <th>Instansi</th>
+                        <th>Kelompok</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyMandiri">
+                    <tr>
+                        <td colspan="4" class="mtugas-empty-cell">Memuat data...</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-</div>
+    <!-- ════ TAB: KELOMPOK ════ -->
+    <div class="mpkl-tab-content" id="tab-kelompok">
+        <div class="mtugas-search-strip">
+            <div class="mtugas-filter-toolbar">
+                <div class="mtugas-filter-field">
+                    <input type="text" id="cariKelompok" class="mpkl-input"
+                        placeholder="Cari nama kelompok...">
+                </div>
+                <button type="button" class="btn-reset-filter-tim mtugas-search-reset" id="btnResetKelompokSearch">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+        </div>
+        <div class="mtugas-table-shell">
+            <table class="mpkl-table mtugas-full-table" id="tableKelompok">
+                <thead>
+                    <tr>
+                        <th class="mtugas-check-col"><input type="checkbox" id="checkAllKelompok"></th>
+                        <th>Nama Kelompok</th>
+                        <th>Instansi</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyKelompok">
+                    <tr>
+                        <td colspan="3" class="mtugas-empty-cell">Memuat data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-<!-- Bottom Actions -->
-<div class="sasaran-actions">
-    <button class="btn-sasaran-action btn-sasaran-back" id="btnBackToFormBottom">
-        <i class="fas fa-arrow-left"></i>
-        Kembali
-    </button>
-    <div style="display:flex; align-items:center; gap:var(--space-lg);">
-        <span id="selectedInfoBar"
-            style="font-size:var(--font-size-sm); color:var(--text-secondary); font-weight:600;">
-            Belum ada yang dipilih
-        </span>
-        <button class="btn-sasaran-action btn-sasaran-send" id="btnKirim" disabled>
-            <i class="fas fa-paper-plane"></i>
-            Kirim Tugas
+    <!-- ════ TAB: TIM TUGAS ════ -->
+    <div class="mpkl-tab-content" id="tab-tim">
+
+        <!-- Card Tim List -->
+        <div class="tim-main-card mtugas-tim-card">
+
+            <div class="tim-card-header">
+                <span class="tim-card-header-title">
+                    <i class="fas fa-user-friends"></i> Tim Tugas
+                </span>
+            </div>
+
+            <div class="tim-filter-body">
+                <div class="mtugas-filter-toolbar">
+                    <div class="mtugas-filter-field">
+                        <label class="buat-tim-label"><i class="fas fa-search"></i> Cari Nama Tim</label>
+                        <input type="text" id="cariNamaTim" class="tim-filter-input" placeholder="Ketik nama...">
+                    </div>
+                    <div class="tim-filter-actions">
+                        <button type="button" class="btn-reset-filter-tim" id="btnResetFilterTim">
+                            <i class="fas fa-redo"></i> Reset Filter
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="tim-toolbar">
+                <button type="button" class="btn-mpkl-add" id="btnBuatTimBaru">
+                    <i class="fas fa-plus"></i> Buat Tim Tugas Baru
+                </button>
+            </div>
+
+            <!-- Tim Table -->
+            <div class="mtugas-mobile-list-wrap" id="mobileTimWrap">
+                <div class="mtugas-mobile-list-head mtugas-mobile-list-head-tim">
+                    <label class="mtugas-mobile-list-check">
+                        <input type="checkbox" id="checkAllTimMobile">
+                    </label>
+                    <div class="mtugas-mobile-list-no">No</div>
+                    <div class="mtugas-mobile-list-name">Tim</div>
+                    <div class="mtugas-mobile-list-action">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="mtugas-mobile-list-body" id="mobileTimList">
+                    <div class="mtugas-mobile-list-empty">Memuat data tim...</div>
+                </div>
+            </div>
+
+            <div class="mtugas-table-shell mtugas-desktop-table">
+                <table class="mpkl-table mtugas-full-table" id="tableTimTugas">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="checkAllTim"></th>
+                            <th>No</th>
+                            <th>Nama Tim</th>
+                            <th>Jumlah Anggota</th>
+                            <th>Tgl Dibuat</th>
+                            <th>Dipakai di</th>
+                            <th class="mtugas-expand-col mtugas-text-center">Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyTimTugas">
+                        <tr class="tim-empty-row">
+                            <td colspan="7" class="mtugas-empty-cell">Memuat data tim...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div><!-- /.tim-main-card -->
+
+        <!-- Form Buat Tim Baru (hidden default) -->
+        <div class="buat-tim-card mtugas-buat-tim-card" id="sectionBuatTim" style="display:none;">
+            <div class="buat-tim-header">
+                <i class="fas fa-plus-circle"></i> Buat Tim Tugas Baru
+            </div>
+            <div class="buat-tim-body">
+
+                <label class="buat-tim-label">
+                    <i class="fas fa-signature"></i> Nama Tim <span class="required-star">*</span>
+                </label>
+                <input type="text" id="inputNamaTim" class="buat-tim-input"
+                    placeholder="Contoh: Team Backend PKL ITS...">
+
+                <label class="buat-tim-label">
+                    <i class="fas fa-align-left"></i> Deskripsi Tim
+                </label>
+                <textarea id="inputDeskripsiTim" class="buat-tim-input buat-tim-textarea"
+                    rows="3" maxlength="255"
+                    placeholder="Tambahkan deskripsi tim jika diperlukan..."></textarea>
+
+                <div class="buat-tim-filter-row">
+                    <div>
+                        <label class="buat-tim-label"><i class="fas fa-search"></i> Cari Nama Anggota</label>
+                        <input type="text" id="cariAnggotaTim" class="buat-tim-input" placeholder="Ketik nama...">
+                    </div>
+                    <div>
+                        <label class="buat-tim-label"><i class="fas fa-filter"></i> Kategori PKL</label>
+                        <select id="filterKategoriAnggota" class="buat-tim-select">
+                            <option value="">Semua</option>
+                            <option value="instansi">Dari Instansi</option>
+                            <option value="mandiri">Mandiri</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mtugas-filter-actions-row">
+                    <button type="button" class="btn-reset-filter-tim" id="btnResetAnggotaFilter">
+                        <i class="fas fa-redo"></i> Reset Filter Anggota
+                    </button>
+                </div>
+
+                <div class="mtugas-table-shell mtugas-table-shell-mobile-collapse">
+                    <table class="anggota-table" id="tableAnggotaCalon">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="checkAllAnggota"></th>
+                                <th class="mtugas-no-col">
+                                    <span class="mtugas-mobile-label-full">NO</span>
+                                    <span class="mtugas-mobile-label-short">No</span>
+                                </th>
+                                <th class="mtugas-name-col">
+                                    <span class="mtugas-mobile-label-full">Nama Lengkap</span>
+                                    <span class="mtugas-mobile-label-short">Nama</span>
+                                </th>
+                                <th class="mtugas-mobile-hide">Kategori PKL</th>
+                                <th class="mtugas-mobile-hide">Kelompok/Mandiri</th>
+                                <th class="mtugas-expand-col mtugas-text-center mtugas-detail-head">
+                                    <span class="mtugas-mobile-label-full">Detail</span>
+                                    <span class="mtugas-mobile-label-short"><i class="fas fa-chevron-down"></i></span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyAnggotaCalon">
+                            <tr>
+                                <td colspan="6" class="mtugas-empty-cell">Memuat data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="anggota-counter" id="anggotaCounter">0 anggota dipilih</div>
+
+                <div class="buat-tim-footer">
+                    <div></div>
+                    <div class="mtugas-inline-actions">
+                        <button type="button" class="btn-mpkl-cancel" id="btnBatalBuatTim">
+                            Batal
+                        </button>
+                        <button type="button" class="btn-mpkl-submit" id="btnSimpanTim">
+                            <i class="fas fa-save"></i> Simpan Tim
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div><!-- /.buat-tim-card -->
+
+    </div><!-- /#tab-tim -->
+
+    <!-- ── Sticky Footer ── -->
+    <div class="sasaran-footer">
+        <div>
+            <span class="mtugas-footer-label">Total Sasaran Terpilih:</span>
+            <strong id="totalTerpilih" class="mtugas-footer-value">0</strong>
+        </div>
+        <button type="button" class="btn-mpkl-submit" id="btnSimpanTugasFinal">
+            <i class="fas fa-paper-plane"></i> Simpan & Tugaskan
         </button>
     </div>
-</div>
-<?= $this->endSection() ?>
 
-<?= $this->section('javascript') ?>
-<script src="<?= base_url('assets/js/modules/tugas.js') ?>"></script>
-<script>
-    // ================================================================
-    // TAMBAHAN BARU — window variables untuk API endpoints
-    // (tugas.js sudah tidak pakai getDummyXxx, semua dari API)
-    // ================================================================
-    window.SASARAN_URL = '<?= base_url('dashboard/manajemen-tugas/sasaran') ?>';
-    window.TIM_URL = '<?= base_url('dashboard/manajemen-tugas/tim') ?>';
-    window.PKL_MEMBER_URL = '<?= base_url('dashboard/manajemen-tugas/pkl/members') ?>';
-    window.CSRF_TOKEN = '<?= csrf_hash() ?>';
-
-    // ================================================================
-    // INLINE JS — hanya yang mengandung PHP vars (base_url, csrf_hash)
-    // Semua fungsi sasaran (initTabs, renderMandiri, renderKelompok,
-    // renderTim, initTableEvents, initTimFormEvents, initFilterSasaran,
-    // initFlatpickrSasaran, getDummyXxx) sudah ada di tugas.js
-    // ================================================================
-
-    $(document).ready(function() {
-        // Guard: harus ada form data dari step 1
-        const formData = sessionStorage.getItem('tugasFormData');
-        if (!formData) {
-            window.location.href = '<?= base_url('dashboard/manajemen-tugas/tugas/tambah') ?>';
-            return;
-        }
-
-        const fd = JSON.parse(formData);
-        const modePengumpulan = (fd.model_pengumpulan || 'individu').toLowerCase();
-
-        // ── Sesuaikan tab berdasarkan mode pengumpulan ────────────────
-        if (modePengumpulan === 'kelompok') {
-            // Sembunyikan tab Mandiri — mode kelompok tidak bisa ke individu
-            $('#tabMandiri').hide();
-
-            // Aktifkan tab Kelompok sebagai default
-            $('.tab-sasaran').removeClass('active');
-            $('#tabKelompok').addClass('active');
-
-            // Tampilkan hint
-            $('#modeHintBar').css({
-                'background': '#fef3c7',
-                'border': '1px solid #f59e0b',
-                'color': '#92400e'
-            }).html(`
-                <i class="fas fa-info-circle" style="margin-right:6px; color:#f59e0b;"></i>
-                Mode pengumpulan <strong>Kelompok</strong> — sasaran hanya dapat dipilih dari
-                <strong>Kelompok PKL</strong> atau <strong>Tim Tugas</strong>.
-            `).show();
-
-            // Load tab kelompok sebagai default
-            initTabs();
-            initBackButtonsSasaran();
-            initFilterSasaran();
-            initFlatpickrSasaran();
-            loadTabData('kelompok');
-
-        } else {
-            // Mode individu — semua tab tersedia
-            // Tampilkan hint info expand
-            $('#modeHintBar').css({
-                'background': '#f0fdfa',
-                'border': '1px solid #0d9488',
-                'color': '#134e4a'
-            }).html(`
-                <i class="fas fa-info-circle" style="margin-right:6px; color:#0d9488;"></i>
-                Mode pengumpulan <strong>Individu</strong> — jika memilih Kelompok PKL atau Tim Tugas,
-                setiap anggota akan mendapatkan tugas secara <strong>individual</strong>.
-            `).show();
-
-            initTabs();
-            initBackButtonsSasaran();
-            initFilterSasaran();
-            initFlatpickrSasaran();
-            loadTabData('mandiri');
-        }
-
-        // Tombol Kirim — mengandung base_url + csrf_hash → tetap inline
-        $('#btnKirim').on('click', function() {
-            if (selectedItems.length === 0) return;
-
-            const formData = JSON.parse(sessionStorage.getItem('tugasFormData') || '{}');
-            const typeNames = {
-                mandiri: 'PKL Mandiri',
-                kelompok: 'Kelompok PKL',
-                tim: 'Tim Tugas'
-            };
-            const typeName = typeNames[activeTab];
-            const namaList = selectedItems.map((item, i) => `${i + 1}. ${item.name}`).join('<br>');
-
-            Swal.fire({
-                title: '📋 Konfirmasi Kirim Tugas',
-                html: `
-                <div style="text-align:left; font-size:14px;">
-                    <div style="background:#f0fdfa; border-radius:8px; padding:12px; margin-bottom:12px;">
-                        <p style="margin:4px 0"><b>Nama Tugas:</b> ${formData.nama_tugas || '-'}</p>
-                        <p style="margin:4px 0"><b>Kategori:</b> ${formData.kategori_tugas || '-'}</p>
-                        <p style="margin:4px 0"><b>Deadline:</b> ${formData.deadline || '-'}</p>
-                        <p style="margin:4px 0"><b>Model:</b> ${formData.model_pengumpulan || '-'}</p>
-                    </div>
-                    <div style="border:2px solid var(--primary); border-radius:8px; padding:12px;">
-                        <p style="margin:0 0 8px; font-weight:700; color:var(--primary)">
-                            🎯 Sasaran: ${typeName} (${selectedItems.length})
-                        </p>
-                        <div style="max-height:150px; overflow-y:auto; font-size:13px; line-height:1.8;">
-                            ${namaList}
-                        </div>
-                    </div>
-                </div>`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#0f766e',
-                cancelButtonColor: '#64748b',
-                confirmButtonText: '<i class="fas fa-paper-plane"></i> Ya, Kirim!',
-                cancelButtonText: 'Batal',
-                width: '500px'
-            }).then(result => {
-                if (result.isConfirmed) submitTugas();
-            });
-        });
-    });
-
-    // ----------------------------------------------------------------
-    // initBackButtonsSasaran — mengandung base_url
-    // ----------------------------------------------------------------
-    function initBackButtonsSasaran() {
-        $('#btnBackToForm, #btnBackToFormBottom').on('click', function() {
-            window.location.href = '<?= base_url('dashboard/manajemen-tugas/tugas/tambah') ?>';
-        });
-    }
-
-    // ----------------------------------------------------------------
-    // submitTugas — mengandung base_url + csrf_hash
-    // ----------------------------------------------------------------
-    function submitTugas() {
-        const formData = JSON.parse(sessionStorage.getItem('tugasFormData') || '{}');
-
-        const payload = {
-            ...formData,
-            sasaran_type: activeTab,
-            sasaran_items: selectedItems.map(i => i.id)
-        };
-
-        Swal.fire({
-            title: 'Mengirim Tugas...',
-            allowOutsideClick: false,
-            didOpen: () => Swal.showLoading()
-        });
-
-        $.ajax({
-            url: '<?= base_url('dashboard/manajemen-tugas/tugas/store') ?>',
-            method: 'POST',
-            data: JSON.stringify(payload),
-            contentType: 'application/json',
-            headers: {
-                'X-CSRF-TOKEN': '<?= csrf_hash() ?>'
-            },
-            success: function(response) {
-                sessionStorage.removeItem('tugasFormData');
-                sessionStorage.removeItem('tugasSasaran');
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Tugas Berhasil Dikirim!',
-                    html: `<b>${selectedItems.length}</b> penerima tugas telah ditambahkan.`,
-                    confirmButtonColor: '#0f766e',
-                    confirmButtonText: 'Kembali ke List'
-                }).then(() => {
-                    window.location.href = '<?= base_url('/dashboard/manajemen-tugas/penugasan') ?>';
-                });
-            },
-            error: function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal!',
-                    text: xhr.responseJSON?.message || 'Terjadi kesalahan server',
-                    confirmButtonColor: '#0f766e'
-                });
-            }
-        });
-    }
-</script>
-<?= $this->endSection() ?>
+</div><!-- /.mpkl-card -->

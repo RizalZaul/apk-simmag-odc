@@ -1,49 +1,56 @@
-<aside class="dashboard-sidebar">
+<?php
 
-    <!-- TOP -->
+/**
+ * Layouts/sidebar_pkl.php
+ * Variables: $active_menu
+ */
+
+$activeMenu = $active_menu ?? 'dashboard';
+$panggilan  = session()->get('panggilan') ?: session()->get('nama') ?: 'PKL';
+?>
+
+<aside class="dashboard-sidebar" id="dashboardSidebar">
+
+    <!-- ══ TOP ══ -->
     <div class="sidebar-top">
 
-        <!-- LOGO SECTION -->
+        <!-- Logo -->
         <div class="sidebar-logo">
             <img src="<?= base_url('assets/images/logo.png') ?>"
                 alt="OurWeb.id"
                 class="logo-image logo-large"
-                data-logo-small="<?= base_url('assets/images/logo3.png') ?>"
-                data-logo-large="<?= base_url('assets/images/logo.png') ?>">
+                data-logo-large="<?= base_url('assets/images/logo.png') ?>"
+                data-logo-small="<?= base_url('assets/images/logo_2.png') ?>">
         </div>
 
-        <!-- MENU NAVIGATION -->
+        <!-- Navigation -->
         <ul class="sidebar-menu">
 
-            <!-- Dashboard -->
-            <li class="menu-item <?= active_class('pkl/dashboard', true) ?>">
+            <li class="menu-item <?= $activeMenu === 'dashboard' ? 'active' : '' ?>">
                 <a href="<?= base_url('pkl/dashboard') ?>">
                     <i class="fas fa-chart-line icon"></i>
                     <span class="text">Dashboard</span>
                 </a>
             </li>
 
-            <!-- Data Modul -->
-            <li class="menu-item <?= active_class('pkl/data-modul') ?>">
-                <a href="<?= base_url('pkl/data-modul') ?>">
-                    <i class="fas fa-book-open icon"></i>
+            <li class="menu-item <?= $activeMenu === 'data_modul' ? 'active' : '' ?>">
+                <a href="<?= base_url('pkl/modul') ?>">
+                    <i class="fas fa-book icon"></i>
                     <span class="text">Data Modul</span>
                 </a>
             </li>
 
-            <!-- Manajemen Tugas -->
-            <li class="menu-item <?= active_class('pkl/manajemen-tugas') ?>">
-                <a href="<?= base_url('pkl/manajemen-tugas') ?>">
+            <li class="menu-item <?= $activeMenu === 'manajemen_tugas' ? 'active' : '' ?>">
+                <a href="<?= base_url('pkl/tugas') ?>">
                     <i class="fas fa-clipboard-list icon"></i>
                     <span class="text">Manajemen Tugas</span>
                 </a>
             </li>
 
         </ul>
-
     </div>
 
-    <!-- BOTTOM / PROFILE -->
+    <!-- ══ BOTTOM / PROFILE ══ -->
     <div class="sidebar-bottom">
 
         <div class="sidebar-profile" id="profileToggle">
@@ -51,20 +58,19 @@
                 <i class="fas fa-user-circle"></i>
             </div>
             <div class="profile-info">
-                <span class="name"><?= session()->get('panggilan') ?></span>
+                <span class="name"><?= esc($panggilan) ?></span>
                 <span class="role">PKL</span>
             </div>
-            <i class="fas fa-chevron-down chevron"></i>
+            <i class="fas fa-chevron-up chevron"></i>
         </div>
 
-        <!-- DROPDOWN -->
         <div class="profile-dropdown" id="profileDropdown">
-            <a href="<?= base_url('pkl/profil/data-diri') ?>" class="dropdown-item">
-                <i class="fas fa-user icon"></i>
-                <span>Data Diri</span>
+            <a href="<?= base_url('pkl/profil') ?>" class="dropdown-item">
+                <i class="fas fa-user"></i>
+                <span>Profil</span>
             </a>
-            <a href="<?= base_url('auth/logout') ?>" class="dropdown-item">
-                <i class="fas fa-sign-out-alt icon"></i>
+            <a href="<?= base_url('auth/logout') ?>" class="dropdown-item danger" data-logout-link>
+                <i class="fas fa-sign-out-alt"></i>
                 <span>Logout</span>
             </a>
         </div>

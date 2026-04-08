@@ -1,140 +1,188 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SIMMag ODC PKL System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Login — SIMMAG ODC</title>
+
+    <!-- Google Fonts: Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.10.5/sweetalert2.min.css">
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="<?= base_url('assets/css/core/variables.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/modules/auth.css') ?>">
 </head>
+
 <body>
 
-<div class="login-container">
+    <div class="auth-wrapper">
 
-    <!-- ── LEFT SIDE ── -->
-    <div class="login-left">
-        <div class="login-overlay">
-            <div class="login-branding">
-                <img src="<?= base_url('assets/images/logo.png') ?>" alt="SIMMag ODC" class="login-logo">
-                <h1>SIMMAG ODC</h1>
-                <p>Sistem Informasi Manajemen Magang Our Digital Creative</p>
-                <p class="subtitle">Platform digital untuk mengelola dan memantau kegiatan Praktik Kerja Lapangan</p>
+        <div class="auth-left">
+            <!-- Brand -->
+            <div class="auth-brand">
+                <div class="auth-brand-logo">
+                    <img src="<?= base_url('assets/images/logo_2.png') ?>"
+                        alt="OurWeb.id"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <i class="fas fa-globe auth-brand-logo-icon" style="display:none"></i>
+                </div>
+                <span class="auth-brand-name">OurWeb.id</span>
+                <span class="auth-brand-sub">Our Digital Solution</span>
             </div>
-            <div class="login-features">
-                <div class="feature-item">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Manajemen Tugas Terintegrasi</span>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Monitoring Progress Real-time</span>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Laporan Digital Otomatis</span>
+
+            <!-- Content -->
+            <div class="auth-left-content">
+                <h1 class="auth-system-name">SIMMAG ODC</h1>
+                <p class="auth-system-desc">
+                    Sistem Informasi Manajemen Magang Our Digital Creative<br>
+                    Platform digital untuk mengelola dan memantau kegiatan Praktik Kerja Lapangan
+                </p>
+
+                <div class="auth-features">
+                    <div class="auth-feature-item">
+                        <div class="auth-feature-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <span class="auth-feature-text">Manajemen Tugas Terintegrasi</span>
+                    </div>
+                    <div class="auth-feature-item">
+                        <div class="auth-feature-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <span class="auth-feature-text">Monitoring Progress Real-time</span>
+                    </div>
+                    <div class="auth-feature-item">
+                        <div class="auth-feature-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <span class="auth-feature-text">Laporan Digital Otomatis</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- ── RIGHT SIDE ── -->
-    <div class="login-right">
-        <div class="login-form-wrapper">
+        <!-- ══ RIGHT PANEL ══ -->
+        <div class="auth-right">
+            <div class="auth-right-inner">
 
-            <!-- Logo Mobile -->
-            <div class="login-logo-mobile">
-                <img src="<?= base_url('assets/images/logo.png') ?>" alt="SIMMag ODC">
-                <h3>SIMMag ODC</h3>
-            </div>
-
-            <!-- CARD -->
-            <div class="login-card">
-
-                <!-- Header -->
-                <div class="login-header">
-                    <h2>Selamat Datang! 👋</h2>
-                    <p>Silakan login untuk melanjutkan ke sistem</p>
+                <!-- Logo mobile (hanya muncul di ≤899px) -->
+                <div class="auth-mobile-logo">
+                    <img src="<?= base_url('assets/images/logo_hijau.png') ?>"
+                        alt="OurWeb.id"
+                        onerror="this.style.display='none'">
+                    <!-- <span class="auth-mobile-logo-name">OurWeb.id</span> -->
                 </div>
 
-                <div class="form-divider"></div>
+                <div class="auth-card">
 
-                <?php if (session()->getFlashdata('success')): ?>
-                    <div class="alert alert-success" id="flashAlert">
-                        <i class="fas fa-check-circle"></i>
-                        <span><?= session()->getFlashdata('success') ?></span>
+                    <!-- Header -->
+                    <div class="auth-card-header">
+                        <h2 class="auth-greeting">Selamat Datang! 👋</h2>
+                        <p class="auth-subtitle">Silakan login untuk melanjutkan ke sistem</p>
                     </div>
-                <?php endif; ?>
 
-                <!-- Form -->
-                <form id="loginForm" class="login-form" novalidate>
-                    <?= csrf_field() ?>
-
-                    <div class="form-group">
-                        <label for="username">
-                            <i class="fas fa-user"></i> Username / Email
-                        </label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-user input-icon"></i>
-                            <input type="text" id="username" name="username"
-                                class="form-control"
-                                placeholder="Masukkan username atau email"
-                                autocomplete="username" autofocus>
+                    <!-- Flash messages dari session (non-AJAX) -->
+                    <?php if (session()->getFlashdata('error')): ?>
+                        <div class="auth-alert error visible" id="authAlert">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span class="alert-text"><?= esc(session()->getFlashdata('error')) ?></span>
                         </div>
-                    </div>
+                    <?php elseif (session()->getFlashdata('success')): ?>
+                        <div class="auth-alert success visible" id="authAlert">
+                            <i class="fas fa-check-circle"></i>
+                            <span class="alert-text"><?= esc(session()->getFlashdata('success')) ?></span>
+                        </div>
+                    <?php else: ?>
+                        <div class="auth-alert" id="authAlert">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span class="alert-text"></span>
+                        </div>
+                    <?php endif; ?>
 
-                    <div class="form-group">
-                        <label for="password">
-                            <i class="fas fa-lock"></i> Password
-                        </label>
-                        <div class="input-wrapper password-wrapper">
-                            <i class="fas fa-lock input-icon"></i>
-                            <input type="password" id="password" name="password"
-                                class="form-control"
-                                placeholder="Masukkan password"
-                                autocomplete="current-password">
-                            <button type="button" class="toggle-password" id="togglePassword">
-                                <i class="far fa-eye"></i>
+                    <!-- Form -->
+                    <form id="loginForm" action="<?= base_url('auth/login') ?>" method="POST" novalidate>
+                        <?= csrf_field() ?>
+
+                        <div class="auth-form">
+
+                            <!-- Username / Email -->
+                            <div class="form-group">
+                                <label class="form-label" for="inputUsername">
+                                    <i class="fas fa-user"></i> USERNAME / EMAIL
+                                </label>
+                                <div class="input-wrap">
+                                    <i class="fas fa-user input-icon"></i>
+                                    <input
+                                        type="text"
+                                        id="inputUsername"
+                                        name="username"
+                                        class="form-control"
+                                        placeholder="Masukkan username atau email"
+                                        value="<?= old('username') ?>"
+                                        autocomplete="username"
+                                        autofocus>
+                                </div>
+                                <span class="form-error"><i class="fas fa-exclamation-circle"></i> <span></span></span>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="form-group">
+                                <label class="form-label" for="inputPassword">
+                                    <i class="fas fa-lock"></i> PASSWORD
+                                </label>
+                                <div class="input-wrap">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    <input
+                                        type="password"
+                                        id="inputPassword"
+                                        name="password"
+                                        class="form-control"
+                                        placeholder="Masukkan password"
+                                        autocomplete="current-password">
+                                    <button type="button" id="btnTogglePw" class="btn-toggle-pw" tabindex="-1" title="Tampilkan/sembunyikan password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <span class="form-error"><i class="fas fa-exclamation-circle"></i> <span></span></span>
+                            </div>
+
+                            <!-- Lupa Password -->
+                            <div class="auth-forgot">
+                                <a href="<?= base_url('auth/lupa-password') ?>">Lupa Password?</a>
+                            </div>
+
+                            <!-- Submit -->
+                            <button type="submit" id="btnLogin" class="btn-login">
+                                <span class="spinner"></span>
+                                <span>Masuk</span>
+                                <i class="fas fa-arrow-right btn-arrow"></i>
                             </button>
+
                         </div>
+                    </form>
+
+                    <!-- Footer -->
+                    <div class="auth-card-footer">
+                        &copy; <?= date('Y') ?> <a href="#" target="_blank">Our Digital Creative</a> &mdash; All rights reserved
                     </div>
 
-                    <div class="form-options">
-                        <a href="<?= base_url('auth/forgot-password') ?>" class="forgot-password">
-                            Lupa Password?
-                        </a>
-                    </div>
+                </div><!-- /.auth-card -->
+            </div><!-- /.auth-right-inner -->
+        </div><!-- /.auth-right -->
 
-                    <button type="submit" class="btn-login" id="btnLogin">
-                        <span class="btn-text">Masuk</span>
-                        <i class="fas fa-arrow-right btn-icon"></i>
-                    </button>
+    </div><!-- /.auth-wrapper -->
 
-                </form>
-<!-- 
-                <div class="register-link">
-                    Belum punya akun? <a href="<?= base_url('registrasi') ?>">Daftar PKL</a>
-                </div> -->
-
-                <!-- Footer -->
-                <div class="login-footer">
-                    <p>&copy; <?= date('Y') ?> <strong>Our Digital Creative</strong> — All rights reserved</p>
-                    <!-- <div class="security-badge">
-                        <i class="fas fa-shield-halved"></i>
-                        <span>Koneksi aman &amp; terenkripsi</span>
-                    </div> -->
-                </div>
-
-            </div><!-- /login-card -->
-
-        </div>
-    </div>
-
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.10.5/sweetalert2.all.min.js"></script>
-<script src="<?= base_url('assets/js/modules/auth.js') ?>"></script>
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Auth JS -->
+    <script src="<?= base_url('assets/js/modules/auth.js') ?>"></script>
 
 </body>
+
 </html>
