@@ -1,839 +1,350 @@
-<?= $this->extend('layouts/dashboard_layout') ?>
+<?php
 
-<?= $this->section('styles') ?>
-<link rel="stylesheet" href="<?= base_url('assets/css/modules/profil.css') ?>">
-<?= $this->endSection() ?>
+/**
+ * Views/dashboard_admin/profil/profil.php
+ *
+ * FIX: Section link biodata token dipindah ke DALAM .profil-section
+ *      agar mendapat styling card yang benar.
+ */
 
-<?= $this->section('content') ?>
+$namaLengkap   = esc($admin['nama_lengkap']   ?? '');
+$namaPanggilan = esc($admin['nama_panggilan'] ?? '');
+$noWa          = esc($admin['no_wa_admin']    ?? '');
+$alamat        = esc($admin['alamat']          ?? '');
+$email         = esc($user->email             ?? '');
+$username      = esc($user->username          ?? '');
 
-<div class="profil-page">
+$swalSuccess = session()->getFlashdata('swal_success');
+$swalError   = session()->getFlashdata('swal_error');
+?>
 
-    <!-- Page Header -->
-    <div class="profil-page-header">
-        <h2 class="profil-page-title">Profil Saya</h2>
-        <p class="profil-page-sub">Data diri dan informasi akun</p>
+<?php if ($swalSuccess): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: '<?= addslashes($swalSuccess) ?>',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+        });
+    </script>
+<?php endif; ?>
+
+<?php if ($swalError): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: '<?= addslashes($swalError) ?>',
+                confirmButtonColor: 'var(--primary)',
+            });
+        });
+    </script>
+<?php endif; ?>
+
+<!-- ── Welcome Card ── -->
+<div class="welcome-card">
+    <h2 class="page-heading"><?= esc($page_title ?? 'Profil Saya') ?></h2>
+    <p class="page-subheading"><?= esc($page_subheading ?? 'Data diri dan informasi akun') ?></p>
+</div>
+
+<!-- ══ TAB NAVIGATION ══ -->
+<div class="profil-tab-nav">
+    <button class="profil-tab-btn <?= $active_tab === 'biodata'  ? 'active' : '' ?>"
+        data-tab="biodata">
+        <i class="fas fa-user"></i>
+        Bio Pribadi
+    </button>
+    <button class="profil-tab-btn <?= $active_tab === 'setting' ? 'active' : '' ?>"
+        data-tab="setting">
+        <i class="fas fa-gear"></i>
+        Pengaturan Form Biodata PKL
+    </button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB: BIO PRIBADI                                              -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="profil-tab-content <?= $active_tab === 'biodata' ? 'active' : '' ?>"
+    id="tab-biodata">
+
+    <!-- Avatar Card -->
+    <div class="profil-avatar-card">
+        <div class="profil-avatar-circle">
+            <i class="fas fa-user-tie"></i>
+        </div>
+        <div class="profil-avatar-info">
+            <h3 class="profil-nama"><?= $namaLengkap ?></h3>
+            <span class="profil-username-chip">
+                <i class="fas fa-at"></i><?= $username ?>
+            </span>
+            <span class="profil-email-chip">
+                <i class="fas fa-envelope"></i><?= $email ?>
+            </span>
+        </div>
     </div>
 
-    <!-- Tab Navigation -->
-    <div class="tab-navigation">
-        <button class="tab-btn active" data-tab="bio">
-            <i class="fas fa-user"></i>
-            Bio Pribadi
-        </button>
-        <button class="tab-btn" data-tab="pengaturan">
-            <i class="fas fa-cog"></i>
-            Pengaturan Form Biodata PKL
-        </button>
-    </div>
+    <!-- ── SECTION: Informasi Pribadi ── -->
+    <div class="profil-section">
+        <div class="profil-section-header">
+            <div class="profil-section-title">
+                <i class="fas fa-id-card"></i>
+                <span>Informasi Pribadi</span>
+            </div>
+            <button class="btn-profil-edit" id="btnEditBiodata" type="button">
+                <i class="fas fa-pen"></i> Edit
+            </button>
+        </div>
 
-    <!-- ════════════════════════════════════
-         TAB 1: BIO PRIBADI
-         ════════════════════════════════════ -->
-    <div class="tab-content active" id="tab-bio">
+        <form action="<?= base_url('admin/profil/biodata') ?>" method="post" id="formBiodata" novalidate>
+            <?= csrf_field() ?>
 
-        <!-- ── Card 1: Informasi Pribadi ── -->
-        <div class="profil-card">
+            <div class="profil-field-grid">
 
-            <!-- Avatar + Info Utama -->
-            <div class="profil-avatar-section">
-                <div class="profil-avatar-default">
-                    <i class="fas fa-user"></i>
+                <!-- Nama Lengkap -->
+                <div class="profil-field">
+                    <label><i class="fas fa-user"></i> Nama Lengkap <span class="required-star">*</span></label>
+                    <div class="profil-field-display" id="displayNamaLengkap"><?= $namaLengkap ?></div>
+                    <input type="text" name="nama_lengkap" class="profil-input"
+                        value="<?= $namaLengkap ?>" id="inputNamaLengkap" style="display:none" required>
                 </div>
 
-                <div class="profil-avatar-info">
-                    <h3 class="profil-nama" id="displayNama"><?= esc($profil['nama_lengkap']) ?></h3>
-                    <p class="profil-username">@<?= esc($profil['username']) ?></p>
-                    <p class="profil-email">
-                        <i class="fas fa-envelope"></i>
-                        <?= esc($profil['email']) ?>
-                    </p>
+                <!-- Nama Panggilan -->
+                <div class="profil-field">
+                    <label><i class="fas fa-smile"></i> Nama Panggilan <span class="required-star">*</span></label>
+                    <div class="profil-field-display" id="displayNamaPanggilan"><?= $namaPanggilan ?: '-' ?></div>
+                    <input type="text" name="nama_panggilan" class="profil-input"
+                        value="<?= $namaPanggilan ?>" id="inputNamaPanggilan" style="display:none" required>
                 </div>
+
+                <!-- Username (locked) -->
+                <div class="profil-field">
+                    <label>
+                        <i class="fas fa-at"></i> Username
+                        <i class="fas fa-lock field-lock-icon" title="Username tidak dapat diubah"></i>
+                    </label>
+                    <div class="profil-field-display field-locked"><?= $username ?></div>
+                </div>
+
+                <!-- Email -->
+                <div class="profil-field">
+                    <label><i class="fas fa-envelope"></i> Email <span class="required-star">*</span></label>
+                    <div class="profil-field-display" id="displayEmail"><?= $email ?></div>
+                    <input type="email" name="email" class="profil-input"
+                        value="<?= $email ?>" id="inputEmail" style="display:none" required>
+                </div>
+
+                <!-- No. WhatsApp -->
+                <div class="profil-field">
+                    <label><i class="fab fa-whatsapp"></i> No. WhatsApp <span class="required-star">*</span></label>
+                    <div class="profil-field-display" id="displayNoWa"><?= $noWa ?: '-' ?></div>
+                    <input type="text" name="no_wa" class="profil-input"
+                        value="<?= $noWa ?>" id="inputNoWa" style="display:none" required>
+                </div>
+
+                <!-- Alamat (full width) -->
+                <div class="profil-field profil-field-full">
+                    <label><i class="fas fa-map-marker-alt"></i> Alamat <span class="required-star">*</span></label>
+                    <div class="profil-field-display multiline" id="displayAlamat"><?= $alamat !== '' ? nl2br($alamat) : '-' ?></div>
+                    <textarea name="alamat" class="profil-input profil-textarea"
+                        id="inputAlamat" style="display:none" rows="3" maxlength="100" required><?= $alamat ?></textarea>
+                </div>
+
             </div>
 
-            <div class="profil-divider"></div>
+            <!-- Action buttons -->
+            <div class="profil-edit-actions" id="actionsBiodata" style="display:none">
+                <button type="button" class="btn-profil-cancel" id="btnCancelBiodata">
+                    <i class="fas fa-times"></i> Batal
+                </button>
+                <button type="submit" class="btn-profil-save">
+                    <i class="fas fa-check"></i> Simpan
+                </button>
+            </div>
+        </form>
+    </div>
 
-            <!-- Form Data Diri -->
-            <div class="profil-form-section">
+    <!-- ── SECTION: Ubah Password ── -->
+    <div class="profil-section">
+        <div class="profil-section-header">
+            <div class="profil-section-title">
+                <i class="fas fa-lock"></i>
+                <span>Ubah Password</span>
+            </div>
+            <button class="btn-profil-edit" id="btnEditPassword" type="button">
+                <i class="fas fa-pen"></i> Edit
+            </button>
+        </div>
 
-                <div class="profil-form-header">
-                    <h4 class="profil-form-title">
-                        <i class="fas fa-id-card"></i>
-                        Informasi Pribadi
-                    </h4>
-                    <button type="button" class="btn-profil-edit" id="btnEditProfil">
-                        <i class="fas fa-pen"></i>
-                        Edit
-                    </button>
-                </div>
+        <form action="<?= base_url('admin/profil/password') ?>" method="post" id="formPassword" novalidate>
+            <?= csrf_field() ?>
 
-                <form id="formProfil">
-                    <?= csrf_field() ?>
+            <div class="profil-field-grid">
 
-                    <div class="profil-field-grid">
-
-                        <!-- Nama Lengkap -->
-                        <div class="profil-field-group">
-                            <label class="profil-field-label">
-                                <i class="fas fa-user"></i>
-                                Nama Lengkap
-                            </label>
-                            <input type="text"
-                                id="nama_lengkap"
-                                name="nama_lengkap"
-                                value="<?= esc($profil['nama_lengkap']) ?>"
-                                class="profil-field-input"
-                                disabled>
-                        </div>
-
-                        <!-- Nama Panggilan -->
-                        <div class="profil-field-group">
-                            <label class="profil-field-label">
-                                <i class="fas fa-smile"></i>
-                                Nama Panggilan
-                            </label>
-                            <input type="text"
-                                id="nama_panggilan"
-                                name="nama_panggilan"
-                                value="<?= esc($profil['nama_panggilan']) ?>"
-                                class="profil-field-input"
-                                disabled>
-                        </div>
-
-                        <!-- Username (tidak bisa diubah) -->
-                        <div class="profil-field-group">
-                            <label class="profil-field-label">
-                                <i class="fas fa-at"></i>
-                                Username
-                                <span class="profil-field-locked" title="Tidak dapat diubah">
-                                    <i class="fas fa-lock"></i>
-                                </span>
-                            </label>
-                            <input type="text"
-                                id="username"
-                                value="<?= esc($profil['username']) ?>"
-                                class="profil-field-input profil-field-readonly"
-                                disabled
-                                readonly>
-                        </div>
-
-                        <!-- Email (tidak bisa diubah) -->
-                        <div class="profil-field-group">
-                            <label class="profil-field-label">
-                                <i class="fas fa-envelope"></i>
-                                Email
-                                <span class="profil-field-locked" title="Tidak dapat diubah">
-                                    <i class="fas fa-lock"></i>
-                                </span>
-                            </label>
-                            <input type="email"
-                                id="email"
-                                value="<?= esc($profil['email']) ?>"
-                                class="profil-field-input profil-field-readonly"
-                                disabled
-                                readonly>
-                        </div>
-
-                        <!-- No. WhatsApp -->
-                        <div class="profil-field-group">
-                            <label class="profil-field-label">
-                                <i class="fab fa-whatsapp"></i>
-                                No. WhatsApp
-                            </label>
-                            <input type="text"
-                                id="no_wa_admin"
-                                name="no_wa_admin"
-                                value="<?= esc($profil['no_wa_admin']) ?>"
-                                class="profil-field-input"
-                                disabled>
-                        </div>
-
-                        <!-- Alamat (full width) -->
-                        <div class="profil-field-group full-width">
-                            <label class="profil-field-label">
-                                <i class="fas fa-map-marker-alt"></i>
-                                Alamat
-                            </label>
-                            <textarea id="alamat"
-                                name="alamat"
-                                rows="3"
-                                class="profil-field-input profil-field-textarea"
-                                disabled><?= esc($profil['alamat']) ?></textarea>
-                        </div>
-
-                    </div><!-- /.profil-field-grid -->
-
-                    <!-- Form Actions (hanya tampil saat mode edit) -->
-                    <div class="profil-form-actions" id="profilFormActions" style="display:none;">
-                        <button type="button" class="btn-profil-cancel" id="btnCancelProfil">
-                            <i class="fas fa-times"></i>
-                            Batal
-                        </button>
-                        <button type="submit" class="btn-profil-save" id="btnSaveProfil">
-                            <i class="fas fa-save"></i>
-                            Simpan Perubahan
+                <!-- Password Baru -->
+                <div class="profil-field">
+                    <label><i class="fas fa-key"></i> Password Baru</label>
+                    <div class="profil-field-display pw-display-placeholder">
+                        <span class="pw-dots">••••••••</span>
+                        <i class="fas fa-eye pw-eye-hint" title="Klik Edit untuk mengubah password"></i>
+                    </div>
+                    <div class="profil-input-password-wrap" style="display:none">
+                        <input type="password" name="password_baru" class="profil-input"
+                            id="inputPasswordBaru"
+                            placeholder="Min. 8 karakter, huruf besar/kecil, angka & simbol">
+                        <button type="button" class="btn-toggle-pw" data-target="inputPasswordBaru"
+                            title="Tampilkan/Sembunyikan password">
+                            <i class="fas fa-eye"></i>
                         </button>
                     </div>
-
-                </form>
-            </div><!-- /.profil-form-section -->
-        </div><!-- /.profil-card -->
-
-
-        <!-- ── Card 2: Ubah Password ── -->
-        <!--
-            [BARU] Section ubah password diletakkan di bawah card bio pribadi,
-            masih dalam tab yang sama agar tidak perlu pindah tab hanya untuk ganti password.
-            Tidak meminta password lama — langsung input password baru + konfirmasi.
-        -->
-        <div class="profil-card profil-card-password">
-
-            <div class="profil-form-section">
-
-                <div class="profil-form-header">
-                    <h4 class="profil-form-title">
-                        <i class="fas fa-lock"></i>
-                        Ubah Password
-                    </h4>
-                    <button type="button" class="btn-profil-edit" id="btnEditPassword">
-                        <i class="fas fa-pen"></i>
-                        Edit
-                    </button>
+                    <div class="password-strength" id="passwordStrength" style="display:none">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <ul class="strength-rules" id="strengthRules">
+                            <li id="rule-length"><i class="fas fa-circle"></i> Min. 8 karakter</li>
+                            <li id="rule-upper"><i class="fas fa-circle"></i> Huruf kapital (A-Z)</li>
+                            <li id="rule-lower"><i class="fas fa-circle"></i> Huruf kecil (a-z)</li>
+                            <li id="rule-number"><i class="fas fa-circle"></i> Angka (0-9)</li>
+                            <li id="rule-symbol"><i class="fas fa-circle"></i> Simbol (!@#…)</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <form id="formPassword">
-                    <?= csrf_field() ?>
-
-                    <div class="profil-field-grid">
-
-                        <!-- Password Baru -->
-                        <div class="profil-field-group">
-                            <label class="profil-field-label">
-                                <i class="fas fa-key"></i>
-                                Password Baru
-                            </label>
-                            <div class="password-input-wrapper">
-                                <input type="password"
-                                    id="password_baru"
-                                    name="password_baru"
-                                    class="profil-field-input"
-                                    placeholder="Min. 8 karakter, huruf besar/kecil, angka & simbol"
-                                    autocomplete="new-password"
-                                    disabled>
-                                <button type="button"
-                                    class="btn-toggle-password"
-                                    data-target="#password_baru"
-                                    tabindex="-1"
-                                    title="Tampilkan / sembunyikan password">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Konfirmasi Password -->
-                        <div class="profil-field-group">
-                            <label class="profil-field-label">
-                                <i class="fas fa-key"></i>
-                                Konfirmasi Password
-                            </label>
-                            <div class="password-input-wrapper">
-                                <input type="password"
-                                    id="konfirmasi_password"
-                                    name="konfirmasi_password"
-                                    class="profil-field-input"
-                                    placeholder="Ulangi password baru"
-                                    autocomplete="new-password"
-                                    disabled>
-                                <button type="button"
-                                    class="btn-toggle-password"
-                                    data-target="#konfirmasi_password"
-                                    tabindex="-1"
-                                    title="Tampilkan / sembunyikan password">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                    </div><!-- /.profil-field-grid -->
-
-                    <!-- Indikator kekuatan password (tampil saat mode edit) -->
-                    <div class="password-strength-wrapper" id="passwordStrengthWrapper" style="display:none;">
-                        <div class="password-strength-bar">
-                            <div class="password-strength-fill" id="passwordStrengthFill"></div>
-                        </div>
-                        <span class="password-strength-label" id="passwordStrengthLabel">Masukkan password</span>
+                <!-- Konfirmasi Password -->
+                <div class="profil-field">
+                    <label><i class="fas fa-key"></i> Konfirmasi Password</label>
+                    <div class="profil-field-display pw-display-placeholder">
+                        <span class="pw-dots">••••••••</span>
+                        <i class="fas fa-eye pw-eye-hint" title="Klik Edit untuk mengubah password"></i>
                     </div>
-
-                    <!-- Form Actions -->
-                    <div class="profil-form-actions" id="passwordFormActions" style="display:none;">
-                        <button type="button" class="btn-profil-cancel" id="btnCancelPassword">
-                            <i class="fas fa-times"></i>
-                            Batal
-                        </button>
-                        <button type="submit" class="btn-profil-save" id="btnSavePassword">
-                            <i class="fas fa-save"></i>
-                            Simpan Password
+                    <div class="profil-input-password-wrap" style="display:none">
+                        <input type="password" name="konfirmasi_password" class="profil-input"
+                            id="inputKonfirmasi"
+                            placeholder="Ulangi password baru">
+                        <button type="button" class="btn-toggle-pw" data-target="inputKonfirmasi"
+                            title="Tampilkan/Sembunyikan password">
+                            <i class="fas fa-eye"></i>
                         </button>
                     </div>
-
-                </form>
-            </div><!-- /.profil-form-section -->
-        </div><!-- /.profil-card-password -->
-
-    </div><!-- /#tab-bio -->
-
-
-    <!-- ════════════════════════════════════
-         TAB 2: PENGATURAN FORM BIODATA PKL
-         ════════════════════════════════════ -->
-    <div class="tab-content" id="tab-pengaturan">
-
-        <div class="profil-card">
-
-            <div class="profil-form-section">
-                <div class="profil-form-header">
-                    <h4 class="profil-form-title">
-                        <i class="fas fa-cog"></i>
-                        Pengaturan Form Biodata PKL
-                    </h4>
                 </div>
 
-                <div class="pengaturan-item">
+            </div>
 
-                    <div class="pengaturan-item-info">
-                        <div class="pengaturan-item-title">
-                            <i class="fas fa-file-alt"></i>
-                            Form Biodata PKL
-                        </div>
-                        <div class="pengaturan-item-desc">
-                            Ketika diaktifkan, siswa PKL dapat membuka form biodata.
-                            Ketika dinonaktifkan, form biodata tidak dapat diakses.
-                        </div>
-                    </div>
+            <div class="profil-edit-actions" id="actionsPassword" style="display:none">
+                <button type="button" class="btn-profil-cancel" id="btnCancelPassword">
+                    <i class="fas fa-times"></i> Batal
+                </button>
+                <button type="submit" class="btn-profil-save">
+                    <i class="fas fa-check"></i> Simpan Password
+                </button>
+            </div>
+        </form>
+    </div>
 
-                    <!-- Toggle Switch -->
-                    <div class="toggle-wrapper">
-                        <label class="toggle-switch">
-                            <input type="checkbox"
-                                id="toggleFormBiodata"
-                                <?= $formBiodataAktif ? 'checked' : '' ?>>
-                            <span class="toggle-slider"></span>
-                        </label>
-                        <span class="toggle-label" id="toggleLabel">
-                            <?= $formBiodataAktif ? 'Aktif' : 'Nonaktif' ?>
-                        </span>
-                    </div>
-                </div><!-- /.pengaturan-item -->
+</div><!-- end #tab-biodata -->
 
-                <!-- Status Info Box -->
-                <div class="pengaturan-status-box <?= $formBiodataAktif ? 'status-aktif' : 'status-nonaktif' ?>"
-                    id="pengaturanStatusBox">
-                    <?php if ($formBiodataAktif): ?>
-                        <i class="fas fa-check-circle"></i>
-                        <span>Form biodata PKL sedang <strong>terbuka</strong>. Siswa dapat mengisi dan mengubah data mereka.</span>
-                    <?php else: ?>
-                        <i class="fas fa-times-circle"></i>
-                        <span>Form biodata PKL sedang <strong>ditutup</strong>. Siswa tidak dapat mengakses form biodata saat ini.</span>
-                    <?php endif; ?>
-                </div>
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB: PENGATURAN FORM BIODATA PKL                              -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="profil-tab-content <?= $active_tab === 'setting' ? 'active' : '' ?>"
+    id="tab-setting">
 
+    <!-- ══ SATU section card memuat toggle + link sekaligus ══ -->
+    <div class="profil-section">
+        <div class="profil-section-header">
+            <div class="profil-section-title">
+                <i class="fas fa-gear"></i>
+                <span>Pengaturan Form Biodata PKL</span>
             </div>
         </div>
 
-    </div><!-- /#tab-pengaturan -->
-
-</div><!-- /.profil-page -->
-
-<?= $this->endSection() ?>
-
-<?= $this->section('javascript') ?>
-<script>
-    $(document).ready(function() {
-
-        // ══════════════════════════════════════════════════════════════
-        // CSRF HELPERS
-        // Baca dari meta tag agar selalu fresh setelah setiap AJAX
-        // ══════════════════════════════════════════════════════════════
-
-        function getCsrfData() {
-            return {
-                name: $('meta[name="csrf-token-name"]').attr('content'),
-                hash: $('meta[name="csrf-token-hash"]').attr('content'),
-            };
-        }
-
-        function refreshCsrfToken(response) {
-            if (response && response.csrf) {
-                $('input[name="' + response.csrf.name + '"]').val(response.csrf.hash);
-                $('meta[name="csrf-token-name"]').attr('content', response.csrf.name);
-                $('meta[name="csrf-token-hash"]').attr('content', response.csrf.hash);
-            }
-        }
-
-
-        /* ══════════════════════════════════
-         * TAB SWITCHING
-         * ══════════════════════════════════ */
-        $('.tab-btn').on('click', function() {
-            const tab = $(this).data('tab');
-            if ($(this).hasClass('active')) return;
-
-            $('.tab-btn').removeClass('active');
-            $(this).addClass('active');
-
-            $('.tab-content').removeClass('active');
-            $('#tab-' + tab).addClass('active');
-        });
-
-
-        /* ══════════════════════════════════
-         * EDIT PROFIL — Informasi Pribadi
-         * ══════════════════════════════════ */
-        const editableFields = ['#nama_lengkap', '#nama_panggilan', '#no_wa_admin', '#alamat'];
-
-        const originalValues = {};
-        editableFields.forEach(sel => {
-            originalValues[sel] = $(sel).val();
-        });
-
-        function enableEditMode() {
-            editableFields.forEach(sel => {
-                $(sel).prop('disabled', false).addClass('profil-field-editable');
-            });
-            $('#profilFormActions').slideDown(200);
-            $('#btnEditProfil').hide();
-            $('#nama_lengkap').focus();
-        }
-
-        function disableEditMode(restoreValues = false) {
-            if (restoreValues) {
-                editableFields.forEach(sel => $(sel).val(originalValues[sel]));
-            }
-            editableFields.forEach(sel => {
-                $(sel).prop('disabled', true).removeClass('profil-field-editable');
-            });
-            $('#profilFormActions').slideUp(200);
-            $('#btnEditProfil').show();
-        }
-
-        $('#btnEditProfil').on('click', enableEditMode);
-        $('#btnCancelProfil').on('click', function() {
-            disableEditMode(true);
-        });
-
-        $('#formProfil').on('submit', function(e) {
-            e.preventDefault();
-
-            const namaLengkap = $('#nama_lengkap').val().trim();
-            if (!namaLengkap) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Field Wajib Diisi',
-                    text: 'Nama Lengkap tidak boleh kosong.',
-                    confirmButtonColor: '#0f766e',
-                });
-                $('#nama_lengkap').focus();
-                return;
-            }
-
-            $('#btnSaveProfil').prop('disabled', true);
-            Swal.fire({
-                title: 'Menyimpan...',
-                allowOutsideClick: false,
-                didOpen: () => Swal.showLoading()
-            });
-
-            const csrf = getCsrfData();
-
-            $.ajax({
-                url: '<?= base_url('dashboard/profil/update') ?>',
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                data: {
-                    nama_lengkap: namaLengkap,
-                    nama_panggilan: $('#nama_panggilan').val().trim(),
-                    no_wa_admin: $('#no_wa_admin').val().trim(),
-                    alamat: $('#alamat').val().trim(),
-                    [csrf.name]: csrf.hash,
-                },
-                success: function(res) {
-                    refreshCsrfToken(res);
-
-                    // Update originalValues agar Batal setelah simpan tidak revert
-                    editableFields.forEach(sel => {
-                        originalValues[sel] = $(sel).val();
-                    });
-
-                    // Update nama di header avatar
-                    $('#displayNama').text(res.data.nama_lengkap);
-
-                    disableEditMode(false);
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Profil Diperbarui!',
-                        text: res.message,
-                        timer: 1800,
-                        showConfirmButton: false,
-                    });
-                },
-                error: function(xhr) {
-                    refreshCsrfToken(xhr.responseJSON);
-
-                    if (xhr.status === 419) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Sesi Kedaluwarsa',
-                            text: 'Halaman akan dimuat ulang secara otomatis.',
-                            timer: 2000,
-                            showConfirmButton: false,
-                        }).then(() => location.reload());
-                        return;
-                    }
-
-                    const message = xhr.responseJSON?.message ?? 'Terjadi kesalahan. Silakan coba lagi.';
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal Menyimpan',
-                        text: message,
-                        confirmButtonColor: '#0f766e'
-                    });
-                },
-                complete: function() {
-                    $('#btnSaveProfil').prop('disabled', false);
-                },
-            });
-        });
-
-
-        /* ══════════════════════════════════
-         * UBAH PASSWORD
-         * [BARU] Tanpa verifikasi password lama.
-         * Validasi di sisi klien: min 6 karakter, dua field harus cocok.
-         * Validasi di sisi server: rules CI4 di Dashboard::updatePassword().
-         * ══════════════════════════════════ */
-
-        function enablePasswordMode() {
-            $('#password_baru, #konfirmasi_password').prop('disabled', false).addClass('profil-field-editable');
-            $('#passwordFormActions').slideDown(200);
-            $('#passwordStrengthWrapper').slideDown(200);
-            $('#btnEditPassword').hide();
-            $('#password_baru').focus();
-        }
-
-        function disablePasswordMode() {
-            // Kosongkan field dan kembalikan ke state disabled
-            $('#password_baru, #konfirmasi_password')
-                .val('')
-                .prop('disabled', true)
-                .prop('type', 'password') // reset show/hide ke default
-                .removeClass('profil-field-editable');
-
-            // Reset ikon mata ke state awal
-            $('.btn-toggle-password').find('i')
-                .removeClass('fa-eye-slash')
-                .addClass('fa-eye');
-
-            // Reset indikator kekuatan
-            $('#passwordStrengthFill').css('width', '0%').attr('class', 'password-strength-fill');
-            $('#passwordStrengthLabel').text('Masukkan password');
-            $('#passwordStrengthWrapper').slideUp(200);
-
-            $('#passwordFormActions').slideUp(200);
-            $('#btnEditPassword').show();
-        }
-
-        $('#btnEditPassword').on('click', enablePasswordMode);
-        $('#btnCancelPassword').on('click', disablePasswordMode);
-
-        // ── Toggle show / hide password ──────────────────────────────
-        $(document).on('click', '.btn-toggle-password', function() {
-            const target = $(this).data('target');
-            const $input = $(target);
-            const isPass = $input.attr('type') === 'password';
-            $input.attr('type', isPass ? 'text' : 'password');
-            $(this).find('i')
-                .toggleClass('fa-eye', !isPass)
-                .toggleClass('fa-eye-slash', isPass);
-        });
-
-        // ── Indikator kekuatan password (real-time) ──────────────────
-        $('#password_baru').on('input', function() {
-            const val = $(this).val();
-            const strength = _calcPasswordStrength(val);
-            const $fill = $('#passwordStrengthFill');
-            const $label = $('#passwordStrengthLabel');
-
-            $fill.css('width', strength.pct + '%')
-                .attr('class', 'password-strength-fill strength-' + strength.level);
-            $label.text(strength.label);
-        });
-
-        function _calcPasswordStrength(password) {
-            if (!password) return {
-                pct: 0,
-                level: '',
-                label: 'Masukkan password'
-            };
-
-            // BUG-03 FIX: Sesuaikan scoring dengan aturan validasi baru (min 8 char + kompleksitas).
-            let score = 0;
-            if (password.length >= 8) score++;
-            if (password.length >= 12) score++;
-            if (/[A-Z]/.test(password)) score++;
-            if (/[a-z]/.test(password)) score++;
-            if (/[0-9]/.test(password)) score++;
-            if (/[^A-Za-z0-9]/.test(password)) score++;
-
-            const map = {
-                0: {
-                    pct: 10,
-                    level: 'weak',
-                    label: 'Sangat lemah'
-                },
-                1: {
-                    pct: 20,
-                    level: 'weak',
-                    label: 'Lemah'
-                },
-                2: {
-                    pct: 40,
-                    level: 'weak',
-                    label: 'Kurang'
-                },
-                3: {
-                    pct: 60,
-                    level: 'medium',
-                    label: 'Cukup'
-                },
-                4: {
-                    pct: 75,
-                    level: 'medium',
-                    label: 'Sedang'
-                },
-                5: {
-                    pct: 90,
-                    level: 'strong',
-                    label: 'Kuat'
-                },
-                6: {
-                    pct: 100,
-                    level: 'strong',
-                    label: 'Sangat kuat'
-                },
-            };
-            return map[score] ?? map[0];
-        }
-
-        // ── Submit form password ──────────────────────────────────────
-        // BUG-03 FIX: Validasi kompleksitas password di sisi klien.
-        // Aturan: min 8 char + huruf besar + huruf kecil + angka + simbol.
-        const REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$/;
-
-        $('#formPassword').on('submit', function(e) {
-            e.preventDefault();
-
-            const passwordBaru = $('#password_baru').val().trim();
-            const konfirmasiPassword = $('#konfirmasi_password').val().trim();
-
-            // Validasi sisi klien
-            if (!passwordBaru) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Field Wajib Diisi',
-                    text: 'Password baru tidak boleh kosong.',
-                    confirmButtonColor: '#0f766e'
-                });
-                $('#password_baru').focus();
-                return;
-            }
-
-            if (passwordBaru.length < 8) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Password Terlalu Pendek',
-                    text: 'Password minimal 8 karakter.',
-                    confirmButtonColor: '#0f766e'
-                });
-                $('#password_baru').focus();
-                return;
-            }
-
-            if (!REGEX_PASSWORD.test(passwordBaru)) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Password Kurang Kuat',
-                    html: 'Password harus mengandung:<br>' +
-                        '<ul style="text-align:left;margin:8px 0 0;padding-left:20px;">' +
-                        '<li>Minimal 8 karakter</li>' +
-                        '<li>Huruf besar (A–Z)</li>' +
-                        '<li>Huruf kecil (a–z)</li>' +
-                        '<li>Angka (0–9)</li>' +
-                        '<li>Simbol (!@#$% dll.)</li>' +
-                        '</ul>',
-                    confirmButtonColor: '#0f766e',
-                });
-                $('#password_baru').focus();
-                return;
-            }
-
-            if (passwordBaru !== konfirmasiPassword) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Password Tidak Cocok',
-                    text: 'Konfirmasi password tidak sesuai dengan password baru.',
-                    confirmButtonColor: '#0f766e'
-                });
-                $('#konfirmasi_password').focus();
-                return;
-            }
-
-            $('#btnSavePassword').prop('disabled', true);
-            Swal.fire({
-                title: 'Menyimpan password...',
-                allowOutsideClick: false,
-                didOpen: () => Swal.showLoading()
-            });
-
-            const csrf = getCsrfData();
-
-            $.ajax({
-                url: '<?= base_url('dashboard/profil/update-password') ?>',
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                data: {
-                    password_baru: passwordBaru,
-                    konfirmasi_password: konfirmasiPassword,
-                    [csrf.name]: csrf.hash,
-                },
-                success: function(res) {
-                    refreshCsrfToken(res);
-                    disablePasswordMode();
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Password Diperbarui!',
-                        text: res.message,
-                        timer: 1800,
-                        showConfirmButton: false,
-                    });
-                },
-                error: function(xhr) {
-                    refreshCsrfToken(xhr.responseJSON);
-
-                    if (xhr.status === 419) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Sesi Kedaluwarsa',
-                            text: 'Halaman akan dimuat ulang secara otomatis.',
-                            timer: 2000,
-                            showConfirmButton: false,
-                        }).then(() => location.reload());
-                        return;
-                    }
-
-                    const message = xhr.responseJSON?.message ?? 'Terjadi kesalahan. Silakan coba lagi.';
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal Menyimpan',
-                        text: message,
-                        confirmButtonColor: '#0f766e'
-                    });
-                },
-                complete: function() {
-                    $('#btnSavePassword').prop('disabled', false);
-                },
-            });
-        });
-
-
-        /* ══════════════════════════════════
-         * TOGGLE FORM BIODATA PKL
-         * Simpan ke DB via AJAX saat toggle berubah.
-         * Revert ke state sebelumnya jika request gagal.
-         * ══════════════════════════════════ */
-
-        let lastToggleState = $('#toggleFormBiodata').is(':checked');
-
-        $('#toggleFormBiodata').on('change', function() {
-            const isAktif = $(this).is(':checked');
-            const $toggle = $(this);
-            const $label = $('#toggleLabel');
-            const $statusBox = $('#pengaturanStatusBox');
-
-            $toggle.prop('disabled', true);
-            Swal.fire({
-                title: 'Menyimpan pengaturan...',
-                allowOutsideClick: false,
-                didOpen: () => Swal.showLoading()
-            });
-
-            const csrf = getCsrfData();
-
-            $.ajax({
-                url: '<?= base_url('dashboard/profil/setting/biodata') ?>',
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                data: {
-                    form_biodata_aktif: isAktif ? 1 : 0,
-                    [csrf.name]: csrf.hash,
-                },
-                success: function(res) {
-                    refreshCsrfToken(res);
-
-                    lastToggleState = isAktif;
-                    $label.text(isAktif ? 'Aktif' : 'Nonaktif');
-                    $statusBox
-                        .removeClass('status-aktif status-nonaktif')
-                        .addClass(isAktif ? 'status-aktif' : 'status-nonaktif')
-                        .html(isAktif ?
-                            '<i class="fas fa-check-circle"></i> <span>Form biodata PKL sedang <strong>terbuka</strong>. Siswa dapat mengisi dan mengubah data mereka.</span>' :
-                            '<i class="fas fa-times-circle"></i> <span>Form biodata PKL sedang <strong>ditutup</strong>. Siswa tidak dapat mengakses form biodata saat ini.</span>'
-                        );
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: isAktif ? 'Form Diaktifkan' : 'Form Dinonaktifkan',
-                        text: res.message,
-                        timer: 1800,
-                        showConfirmButton: false,
-                    });
-                },
-                error: function(xhr) {
-                    refreshCsrfToken(xhr.responseJSON);
-
-                    // Revert toggle ke state sebelumnya jika gagal
-                    $toggle.prop('checked', lastToggleState);
-
-                    if (xhr.status === 419) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Sesi Kedaluwarsa',
-                            text: 'Halaman akan dimuat ulang secara otomatis.',
-                            timer: 2000,
-                            showConfirmButton: false,
-                        }).then(() => location.reload());
-                        return;
-                    }
-
-                    const message = xhr.responseJSON?.message ?? 'Terjadi kesalahan. Silakan coba lagi.';
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal Menyimpan',
-                        text: message,
-                        confirmButtonColor: '#0f766e'
-                    });
-                },
-                complete: function() {
-                    $toggle.prop('disabled', false);
-                },
-            });
-        });
-
-    });
-</script>
-<?= $this->endSection() ?>
+        <!-- Toggle aktif/nonaktif -->
+        <div class="setting-toggle-card">
+            <div class="setting-toggle-info">
+                <div class="setting-toggle-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="setting-toggle-text">
+                    <strong>Form Biodata PKL</strong>
+                    <p>Ketika diaktifkan, siswa PKL dapat membuka form biodata. Ketika dinonaktifkan, form biodata tidak dapat diakses.</p>
+                </div>
+            </div>
+            <div class="setting-toggle-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="toggleBiodataPkl"
+                        <?= $form_biodata_aktif ? 'checked' : '' ?>
+                        data-url="<?= base_url('admin/profil/toggle-biodata-pkl') ?>">
+                    <span class="toggle-slider"></span>
+                </label>
+                <span class="toggle-label" id="toggleLabel">
+                    <?= $form_biodata_aktif ? 'AKTIF' : 'NONAKTIF' ?>
+                </span>
+            </div>
+        </div>
+
+        <!-- Status info -->
+        <div class="setting-status-info <?= $form_biodata_aktif ? 'info-aktif' : 'info-nonaktif' ?>"
+            id="settingStatusInfo">
+            <i class="fas <?= $form_biodata_aktif ? 'fa-check-circle' : 'fa-times-circle' ?>"></i>
+            <span id="settingStatusText">
+                <?php if ($form_biodata_aktif): ?>
+                    Form biodata PKL sedang <strong>terbuka</strong>. Siswa dapat mengisi dan mengubah data mereka.
+                <?php else: ?>
+                    Form biodata PKL sedang <strong>ditutup</strong>. Siswa tidak dapat mengakses form biodata.
+                <?php endif; ?>
+            </span>
+        </div>
+
+        <!-- ══ Divider & Link Form Biodata ══ -->
+        <!-- FIX: section ini sekarang di DALAM .profil-section agar tampil dalam card -->
+        <div class="setting-link-divider">
+            <i class="fas fa-link"></i>
+            <span>Link Form Pendaftaran PKL</span>
+        </div>
+
+        <?php if ($biodata_link ?? null): ?>
+            <div class="setting-token-wrap">
+                <p class="setting-token-hint">
+                    <i class="fas fa-share-alt"></i>
+                    Bagikan link berikut kepada calon PKL untuk mengisi form pendaftaran
+                </p>
+                <div class="setting-token-row">
+                    <input type="text" class="setting-token-input" id="biodataLinkInput"
+                        value="<?= esc($biodata_link) ?>" readonly onclick="this.select()">
+                    <button type="button" class="btn-setting-copy" id="btnCopyBiodataLink">
+                        <i class="fas fa-copy"></i> Salin
+                    </button>
+                </div>
+                <p class="setting-token-note">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>
+                        Generate token baru akan <strong>menonaktifkan link lama</strong> yang sudah dibagikan.
+                    </span>
+                </p>
+                <button type="button" class="btn-setting-generate" id="btnGenerateToken"
+                    data-url="<?= base_url('admin/profil/generate-token') ?>">
+                    <i class="fas fa-rotate"></i> Generate Token Baru
+                </button>
+            </div>
+        <?php else: ?>
+            <div class="setting-no-token">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Link form belum dibuat. Klik tombol di bawah untuk membuat link pertama kali.</span>
+            </div>
+            <div style="margin-top: 12px;">
+                <button type="button" class="btn-setting-generate" id="btnGenerateToken"
+                    data-url="<?= base_url('admin/profil/generate-token') ?>">
+                    <i class="fas fa-plus-circle"></i> Buat Link Sekarang
+                </button>
+            </div>
+        <?php endif; ?>
+
+    </div><!-- end .profil-section -->
+
+</div><!-- end #tab-setting -->

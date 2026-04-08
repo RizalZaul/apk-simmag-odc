@@ -1,214 +1,202 @@
-<?= $this->extend('layouts/dashboard_layout') ?>
+<?php
 
-<?= $this->section('content') ?>
+/**
+ * dashboard_pkl/dashboard.php
+ *
+ * Variables dari DashboardPklController::index():
+ *   $statsT    → ['total' => int, 'selesai' => int, 'pending' => int, 'belum_dikirim' => int]
+ *   $modulList → keys: id, nama, total_modul, color, icon
+ *   $tugasList → keys: id_tugas, nama_tugas, deadline, nama_kat_tugas,
+ *                      sudah_kumpul, ada_revisi, semua_diterima
+ */
 
-<div class="page-header">
-  <h1>Dashboard</h1>
-  <p class="page-subtitle">Selamat datang, <?= session()->get('nama') ?? 'Siswa PKL' ?>!</p>
+$namaUser = session()->get('panggilan') ?: session()->get('nama') ?: 'PKL';
+
+function tglFormatPkl(string $date): string
+{
+    return date('d M Y', strtotime($date));
+}
+
+function deadlineStatusPkl(string $deadline, $sudahKumpul, int $adaRevisi): array
+{
+    if ($sudahKumpul !== null) {
+        if ($adaRevisi) {
+            return ['label' => 'Revisi',          'class' => 'revisi',  'icon' => 'fa-redo'];
+        }
+        return     ['label' => 'Menunggu Review', 'class' => 'pending', 'icon' => 'fa-hourglass-half'];
+    }
+
+    $today = strtotime(date('Y-m-d'));
+    $due   = strtotime(date('Y-m-d', strtotime($deadline)));
+    $diff  = (int) round(($due - $today) / 86400);
+
+    if ($diff < 0)   return ['label' => 'Terlambat',   'class' => 'terlambat', 'icon' => 'fa-exclamation-circle'];
+    if ($diff === 0) return ['label' => 'Hari ini',    'class' => 'hari-ini',  'icon' => 'fa-clock'];
+    if ($diff <= 3)  return ['label' => 'Mendesak',    'class' => 'mendesak',  'icon' => 'fa-hourglass-half'];
+    return             ['label' => 'Belum Dikirim', 'class' => 'pending',   'icon' => 'fa-clock'];
+}
+?>
+
+<!-- ── Welcome Card ── -->
+<div class="welcome-card">
+    <h2 class="page-heading">Dashboard</h2>
+    <p class="page-subheading">Selamat datang, <?= esc($namaUser) ?>!</p>
 </div>
 
-<!-- ================= STATISTIK TUGAS ================= -->
-<div class="dashboard-stats">
-  <div class="stat-card card-primary">
-    <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
-    <div class="stat-content">
-      <h4>Total Tugas</h4>
-      <p class="stat-number"><?= $totalTugas ?? 0 ?></p>
-      <span class="stat-label">Tugas yang diberikan</span>
+<!-- ══ STAT CARDS TUGAS (4 cards) ══ -->
+<div class="stat-cards-row stat-cards-4">
+
+    <!-- Total Tugas -->
+    <div class="stat-card">
+        <div class="stat-icon-box">
+            <i class="fas fa-clipboard-list"></i>
+        </div>
+        <div class="stat-info">
+            <span class="stat-label">Total Tugas</span>
+            <span class="stat-value"><?= $statsT['total'] ?? 0 ?></span>
+            <span class="stat-desc">Tugas yang diberikan</span>
+        </div>
     </div>
-  </div>
-  <div class="stat-card card-success">
-    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-    <div class="stat-content">
-      <h4>Tugas Selesai</h4>
-      <p class="stat-number"><?= $tugasSelesai ?? 0 ?></p>
-      <span class="stat-label">Telah dikumpulkan</span>
+
+    <!-- Tugas Selesai -->
+    <div class="stat-card card-done">
+        <div class="stat-icon-box blue">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-info">
+            <span class="stat-label">Tugas Selesai</span>
+            <span class="stat-value"><?= $statsT['selesai'] ?? 0 ?></span>
+            <span class="stat-desc">Semua item diterima</span>
+        </div>
     </div>
-  </div>
-  <div class="stat-card card-warning">
-    <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
-    <div class="stat-content">
-      <h4>Tugas Pending</h4>
-      <p class="stat-number"><?= $tugasPending ?? 0 ?></p>
-      <span class="stat-label">Belum dikerjakan</span>
+
+    <!-- Pending (sudah kirim, menunggu review atau revisi) -->
+    <div class="stat-card card-pending">
+        <div class="stat-icon-box orange">
+            <i class="fas fa-hourglass-half"></i>
+        </div>
+        <div class="stat-info">
+            <span class="stat-label">Menunggu / Revisi</span>
+            <span class="stat-value"><?= $statsT['pending'] ?? 0 ?></span>
+            <span class="stat-desc">Sudah dikirim</span>
+        </div>
     </div>
-  </div>
+
+    <!-- Belum Dikirim -->
+    <div class="stat-card card-inactive">
+        <div class="stat-icon-box red">
+            <i class="fas fa-paper-plane"></i>
+        </div>
+        <div class="stat-info">
+            <span class="stat-label">Belum Dikirim</span>
+            <span class="stat-value"><?= $statsT['belum_dikirim'] ?? 0 ?></span>
+            <span class="stat-desc">Belum dikerjakan</span>
+        </div>
+    </div>
+
 </div>
 
-<!-- ================= MODUL PEMBELAJARAN ================= -->
+<!-- ══ MODUL PEMBELAJARAN ══ -->
 <div class="dashboard-section">
-  <div class="section-header">
-    <h3><i class="fas fa-book"></i> Modul Pembelajaran Saya</h3>
-    <a href="<?= base_url('pkl/data-modul') ?>" class="btn-link">Lihat Semua <i class="fas fa-arrow-right"></i></a>
-  </div>
-  <div class="modul-wrapper">
+    <div class="section-header">
+        <div class="section-title">
+            <i class="fas fa-book-open"></i>
+            <span>Modul Pembelajaran</span>
+        </div>
+        <a href="<?= base_url('pkl/modul') ?>" class="section-link">
+            Lihat Semua <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+
     <?php if (!empty($modulList)): ?>
-      <?php foreach ($modulList as $modul): ?>
-        <div class="modul-card">
-          <div class="modul-icon bg-<?= $modul['color'] ?>">
-            <i class="fas <?= $modul['icon'] ?>"></i>
-          </div>
-          <div class="modul-body">
-            <h4><?= esc($modul['nama']) ?></h4>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: <?= $modul['progress'] ?>%"></div>
-            </div>
-            <span class="progress-text"><?= $modul['progress'] ?>% Selesai (<?= $modul['selesai'] ?>/<?= $modul['total_materi'] ?> Materi)</span>
-          </div>
-          <div class="modul-footer bg-<?= $modul['color'] ?>">
-            <a href="<?= base_url('pkl/data-modul/kategori/' . $modul['id']) ?>" class="btn-modul">Lanjutkan Belajar</a>
-          </div>
+        <div class="modul-grid-pkl">
+            <?php foreach ($modulList as $kat): ?>
+                <div class="modul-card-pkl color-<?= esc($kat['color']) ?>">
+                    <div class="modul-card-cover">
+                        <i class="fas <?= esc($kat['icon']) ?>"></i>
+                    </div>
+                    <div class="modul-card-body">
+                        <h4 class="modul-nama"><?= esc($kat['nama']) ?></h4>
+                        <span class="modul-count-badge">
+                            <i class="fas fa-layer-group"></i>
+                            <?= (int) $kat['total_modul'] ?> Modul
+                        </span>
+                        <a href="<?= base_url('pkl/modul/kategori/' . $kat['id']) ?>"
+                            class="btn-modul">
+                            Buka Modul
+                        </a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
-      <?php endforeach; ?>
     <?php else: ?>
-      <div class="empty-state">
-        <i class="fas fa-book-open fa-2x"></i>
-        <p>Belum ada modul tersedia</p>
-      </div>
+        <div class="empty-state">
+            <i class="fas fa-book"></i>
+            <p>Belum ada modul pembelajaran</p>
+        </div>
     <?php endif; ?>
-  </div>
 </div>
 
-<!-- ================= TUGAS TERBARU ================= -->
+<!-- ══ TUGAS SAYA ══ -->
 <div class="dashboard-section">
-  <div class="section-header">
-    <h3><i class="fas fa-tasks"></i> Tugas Terbaru</h3>
-    <a href="<?= base_url('pkl/manajemen-tugas') ?>" class="btn-link">Lihat Semua <i class="fas fa-arrow-right"></i></a>
-  </div>
-  <div class="tugas-list">
-    <?php if (!empty($tugasTerbaru)): ?>
-      <?php foreach ($tugasTerbaru as $tugas): ?>
-        <div class="tugas-item priority-<?= $tugas['priority'] ?>">
-          <div class="tugas-left">
-            <div class="tugas-info">
-              <i class="fa-regular fa-file-lines"></i>
-              <div class="tugas-text">
-                <span class="tugas-title"><?= esc($tugas['judul']) ?></span>
-                <span class="tugas-meta">
-                  <i class="far fa-clock"></i> Deadline: <?= esc($tugas['deadline']) ?>
-                  <span class="divider">•</span>
-                  <i class="fas fa-tag"></i> <?= esc($tugas['kategori']) ?>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="tugas-right">
-            <span class="badge badge-<?= $tugas['mode'] === 'Individu' ? 'primary' : 'info' ?>">
-              <i class="fas fa-<?= $tugas['mode'] === 'Individu' ? 'user' : 'users' ?>"></i>
-              <?= esc($tugas['mode']) ?>
-            </span>
-            <a href="<?= base_url('pkl/manajemen-tugas/detail/' . $tugas['id']) ?>" class="btn-view-tugas">
-              <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
+    <div class="section-header">
+        <div class="section-title">
+            <i class="fas fa-list-check"></i>
+            <span>Tugas Saya</span>
         </div>
-      <?php endforeach; ?>
+        <a href="<?= base_url('pkl/tugas') ?>" class="section-link">
+            Lihat Semua <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+
+    <?php if (!empty($tugasList)): ?>
+        <div class="tugas-list">
+            <?php foreach ($tugasList as $tugas): ?>
+                <?php
+                $adaRevisi = (int) ($tugas['ada_revisi'] ?? 0);
+                $status    = deadlineStatusPkl(
+                    $tugas['deadline'],
+                    $tugas['sudah_kumpul'],
+                    $adaRevisi
+                );
+                ?>
+                <div class="tugas-item tugas-<?= $status['class'] ?>">
+                    <div class="tugas-item-icon">
+                        <i class="fas <?= $status['icon'] ?>"></i>
+                    </div>
+                    <div class="tugas-item-body">
+                        <div class="tugas-item-top">
+                            <span class="tugas-nama"><?= esc($tugas['nama_tugas']) ?></span>
+                            <div class="tugas-actions">
+                                <span class="badge-status <?= $status['class'] ?>">
+                                    <?= $status['label'] ?>
+                                </span>
+                                <a href="<?= base_url('pkl/tugas/detail/' . $tugas['id_tugas']) ?>"
+                                    class="btn-tugas-view" title="Lihat Detail">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="tugas-meta">
+                            <span class="meta-chip">
+                                <i class="far fa-calendar-alt"></i>
+                                <?= tglFormatPkl($tugas['deadline']) ?>
+                            </span>
+                            <?php if (!empty($tugas['nama_kat_tugas'])): ?>
+                                <span class="meta-chip tag">
+                                    <i class="fas fa-tag"></i>
+                                    <?= esc($tugas['nama_kat_tugas']) ?>
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
     <?php else: ?>
-      <div class="empty-state">
-        <i class="fas fa-inbox fa-3x"></i>
-        <p>Belum ada tugas</p>
-      </div>
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>Tidak ada tugas yang perlu dikerjakan</p>
+        </div>
     <?php endif; ?>
-  </div>
 </div>
-
-<?= $this->endSection() ?>
-
-<?= $this->section('styles') ?>
-<style>
-  /* PAGE HEADER */
-  .page-header {
-    background: #fff;
-    border-radius: 10px;
-    padding: 20px 24px;
-    margin-bottom: 24px;
-    border-left: 4px solid #0f766e;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-  }
-  .page-header h1 {
-    margin: 0 0 4px 0;
-    font-size: 20px;
-    font-weight: 700;
-    color: #1a1a1a;
-  }
-  .page-subtitle {
-    margin: 0;
-    font-size: 14px;
-    color: #666;
-  }
-
-  /* TUGAS LIST */
-  .tugas-list { display: flex; flex-direction: column; gap: 12px; }
-
-  .tugas-item {
-    background: #f8fafc;
-    border-radius: 10px;
-    padding: 16px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-left: 4px solid #e0e0e0;
-    transition: all 0.3s ease;
-  }
-
-  .tugas-item:hover {
-    background: #f0fdfa;
-    border-left-color: #20a8a8;
-    transform: translateX(5px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  }
-
-  .tugas-item.priority-high   { border-left-color: #e74c3c; }
-  .tugas-item.priority-medium { border-left-color: #f39c12; }
-  .tugas-item.priority-low    { border-left-color: #95a5a6; }
-
-  .tugas-left { flex: 1; display: flex; align-items: center; gap: 15px; }
-
-  .tugas-info { display: flex; align-items: center; gap: 12px; flex: 1; }
-  .tugas-info > i { font-size: 22px; color: #20a8a8; flex-shrink: 0; }
-
-  .tugas-text { display: flex; flex-direction: column; gap: 5px; }
-
-  .tugas-title { font-weight: 600; color: #1a1a1a; font-size: 14.5px; }
-
-  .tugas-meta {
-    font-size: 12px; color: #666;
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-  }
-  .tugas-meta i { font-size: 11px; }
-  .divider { color: #ddd; }
-
-  .tugas-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-
-  .badge {
-    padding: 5px 12px; border-radius: 20px;
-    font-size: 12px; font-weight: 500;
-    display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
-  }
-  .badge-primary { background: #e3f2fd; color: #1976d2; }
-  .badge-info    { background: #f3e5f5; color: #7b1fa2; }
-
-  .btn-view-tugas {
-    width: 34px; height: 34px; border-radius: 8px;
-    background: #20a8a8; color: white;
-    display: flex; align-items: center; justify-content: center;
-    text-decoration: none; transition: all 0.3s ease; font-size: 13px;
-  }
-  .btn-view-tugas:hover { background: #17c3b2; transform: scale(1.1); }
-
-  .empty-state {
-    text-align: center;
-    padding: 50px 20px;
-    color: #999;
-    grid-column: 1 / -1;
-    width: 100%;
-  }
-  .empty-state i { margin-bottom: 15px; color: #ddd; display: block; }
-  .empty-state p { font-size: 15px; margin: 0; }
-
-  @media (max-width: 768px) {
-    .tugas-item { flex-direction: column; align-items: flex-start; gap: 14px; }
-    .tugas-right { width: 100%; justify-content: space-between; }
-  }
-</style>
-<?= $this->endSection() ?>

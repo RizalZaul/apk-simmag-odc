@@ -1,60 +1,33 @@
-<?= $this->extend('layouts/dashboard_layout') ?>
+<?php
 
-<?= $this->section('styles') ?>
-<link rel="stylesheet" href="<?= base_url('assets/css/modules/tugas.css') ?>">
-<?= $this->endSection() ?>
+/**
+ * Views/dashboard_admin/manajemen_tugas/penugasan/main_penugasan.php
+ * Wrapper utama Manajemen Tugas -> Penugasan
+ */
 
-<?= $this->section('content') ?>
+$activeTab = $active_tab ?? 'kategori';
+?>
 
-<!-- Tab Navigation -->
-<div class="tab-navigation">
-    <button class="tab-btn active" data-tab="kategori" id="tab-kategori">
-        <i class="fas fa-tags"></i>
-        <span>Kategori Tugas</span>
+<div class="welcome-card">
+    <h2 class="page-heading">Manajemen Tugas</h2>
+    <p class="page-subheading">Kelola kategori, ketentuan tugas, dan target sasaran (Individu, Kelompok, atau Tim)</p>
+</div>
+
+<div class="mpkl-tab-nav">
+    <button class="mpkl-tab-btn <?= $activeTab === 'kategori' ? 'active' : '' ?>" data-target="tab-kategori" data-tab="kategori">
+        <i class="fas fa-tags"></i> Kategori Tugas
     </button>
-    <button class="tab-btn" data-tab="tugas" id="tab-tugas">
-        <i class="fas fa-tasks"></i>
-        <span>Tugas</span>
+    <button class="mpkl-tab-btn <?= $activeTab === 'tugas' ? 'active' : '' ?>" data-target="tab-tugas" data-tab="tugas">
+        <i class="fas fa-tasks"></i> Data Tugas
     </button>
 </div>
 
-<!-- Tab Content Area -->
-<div class="tab-content-wrapper">
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
-    </div>
-    <div id="tabContentArea">
-        <!-- Konten dimuat via AJAX -->
-    </div>
+<div class="mpkl-tab-content <?= $activeTab === 'kategori' ? 'active' : '' ?>" id="tab-kategori">
+    <?= view('dashboard_admin/manajemen_tugas/penugasan/_tab_kategori') ?>
 </div>
 
-<?= $this->endSection() ?>
-
-<?= $this->section('javascript') ?>
-<script src="<?= base_url('assets/js/modules/tugas.js') ?>"></script>
-<script>
-    // -------------------------------------------------------
-    // BASE_URL dibutuhkan oleh loadTabContent() di tugas.js
-    // -------------------------------------------------------
-    window.BASE_URL = '<?= base_url('dashboard/manajemen-tugas/penugasan') ?>';
-
-    $(document).ready(function() {
-        if (typeof $.fn.DataTable === 'undefined') {
-            console.error('DataTables library not loaded!');
-            showAlert('error', 'Error', 'DataTables library tidak ditemukan');
-            return;
-        }
-        if (typeof Swal === 'undefined') {
-            console.error('SweetAlert2 not loaded!');
-        }
-
-        loadTabContent('kategori');
-
-        $('.tab-btn').on('click', function() {
-            $('.tab-btn').removeClass('active');
-            $(this).addClass('active');
-            loadTabContent($(this).data('tab'));
-        });
-    });
-</script>
-<?= $this->endSection() ?>
+<div class="mpkl-tab-content <?= $activeTab === 'tugas' ? 'active' : '' ?>" id="tab-tugas">
+    <?= view('dashboard_admin/manajemen_tugas/penugasan/_tab_tugas', [
+        'kategoriList' => $kategoriList ?? []
+    ]) ?>
+</div>
