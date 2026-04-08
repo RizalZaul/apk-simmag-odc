@@ -1,225 +1,140 @@
 /**
- * auth.js
- * Handles login page interactions:
- *   - Toggle show/hide password
- *   - Client-side validation  → inline alert (cepat, tanpa round-trip)
- *   - Server-side validation  → AJAX fetch + SweetAlert2
- *   - Auto-dismiss flash alert (logout success, dll)
+ * SIMMAG ODC — Auth / Login JS
+ * public/assets/js/modules/auth.js
+ * Dependency: jQuery (loaded via CDN di login.php)
  */
 
-(function () {
+$(function () {
     'use strict';
 
+    const $form = $('#loginForm');
+    const $btnLogin = $('#btnLogin');
+    const $alertGlobal = $('#authAlert');
 
-    // ══════════════════════════════════════
-    // TOGGLE PASSWORD VISIBILITY
-    // ══════════════════════════════════════
+    // ── Password Toggle ──────────────────────────────────────────
 
-    const toggleBtn = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('password');
+    $('#btnTogglePw').on('click', function () {
+        const $input = $('#inputPassword');
+        const $icon = $(this).find('i');
 
-    if (toggleBtn && passwordInput) {
-        toggleBtn.addEventListener('click', function () {
-            const isHidden = passwordInput.type === 'password';
-            passwordInput.type = isHidden ? 'text' : 'password';
+        if ($input.attr('type') === 'password') {
+            $input.attr('type', 'text');
+            $icon.removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            $input.attr('type', 'password');
+            $icon.removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
 
-            const icon = this.querySelector('i');
-            icon.classList.toggle('fa-eye', !isHidden);
-            icon.classList.toggle('fa-eye-slash', isHidden);
-        });
+    // ── Show / Hide inline error ──────────────────────────────────
+
+    function showFieldError($field, msg) {
+        $field.addClass('is-invalid');
+        const $err = $field.closest('.form-group').find('.form-error');
+        $err.text(msg).addClass('visible');
     }
 
+    function clearFieldError($field) {
+        $field.removeClass('is-invalid');
+        $field.closest('.form-group').find('.form-error').text('').removeClass('visible');
+    }
 
-    // ══════════════════════════════════════
-    // ELEMEN FORM
-    // ══════════════════════════════════════
+    function showAlert(type, msg) {
+        $alertGlobal
+            .removeClass('error success')
+            .addClass(type)
+            .find('.alert-text').text(msg);
+        $alertGlobal.addClass('visible');
+    }
 
-    const loginForm = document.getElementById('loginForm');
-    const btnLogin = document.getElementById('btnLogin');
-    const btnText = btnLogin?.querySelector('.btn-text');
-    const btnIcon = btnLogin?.querySelector('.btn-icon');
-    const usernameInput = document.getElementById('username');
+    function hideAlert() {
+        $alertGlobal.removeClass('visible error success');
+    }
 
+    function buildMissingFieldsMessage(missingFields, totalRequired) {
+        const labels = Array.from(new Set((missingFields || []).filter(Boolean)));
+        if (!labels.length) return 'Semua field harus diisi.';
+        if (totalRequired && labels.length >= totalRequired) return 'Semua field harus diisi.';
+        if (labels.length === 1) return labels[0] + ' wajib diisi.';
+        return 'Field berikut wajib diisi: ' + labels.join(', ') + '.';
+    }
 
-    // ══════════════════════════════════════
-    // FORM SUBMIT — AJAX + VALIDASI BERLAPIS
-    // ══════════════════════════════════════
+    // Clear error on input
+    $form.find('.form-control').on('input', function () {
+        clearFieldError($(this));
+        hideAlert();
+    });
 
-    if (loginForm) {
-        loginForm.addEventListener('submit', async function (e) {
-            e.preventDefault();
+    // ── AJAX Submit ───────────────────────────────────────────────
 
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value;
+    $form.on('submit', function (e) {
+        e.preventDefault();
 
-            // ── 1. Client-side validation (inline alert, instant) ──────
-            if (!username) {
-                showInlineAlert('Username atau email tidak boleh kosong.', 'error');
-                usernameInput.focus();
-                return;
-            }
+        hideAlert();
+        clearFieldError($('#inputUsername'));
+        clearFieldError($('#inputPassword'));
 
-            if (!password) {
-                showInlineAlert('Password tidak boleh kosong.', 'error');
-                passwordInput.focus();
-                return;
-            }
+        const username = $.trim($('#inputUsername').val());
+        const password = $('#inputPassword').val();
+        const missingFields = [];
 
-            if (password.length < 6) {
-                showInlineAlert('Password minimal 6 karakter.', 'error');
-                passwordInput.focus();
-                return;
-            }
+        if (!username) {
+            missingFields.push('Username / Email');
+            showFieldError($('#inputUsername'), 'Username atau email tidak boleh kosong.');
+        }
+        if (!password) {
+            missingFields.push('Password');
+            showFieldError($('#inputPassword'), 'Password tidak boleh kosong.');
+        }
 
-            // ── 2. Semua lolos → kirim ke server via AJAX ──────────────
-            clearInlineAlert();
-            setLoadingState(true);
+        if (missingFields.length) {
+            showAlert('error', buildMissingFieldsMessage(missingFields, 2));
+            return;
+        }
 
-            try {
-                // Ambil CSRF token dari hidden input
-                const csrfInput = loginForm.querySelector('input[type="hidden"]');
-                const csrfName = csrfInput?.name;
-                const csrfValue = csrfInput?.value;
+        // Loading state
+        $btnLogin.addClass('loading').prop('disabled', true);
 
-                const body = new URLSearchParams();
-                body.append('username', username);
-                body.append('password', password);
-                if (csrfName) body.append(csrfName, csrfValue);
-
-                const response = await fetch(loginForm.dataset.action || getBaseUrl() + 'auth/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
-                    body: body.toString(),
-                });
-
-                // Tangani response non-JSON (misal: server error 500)
-                const contentType = response.headers.get('content-type') || '';
-                if (!contentType.includes('application/json')) {
-                    throw new Error('Respons server tidak valid. Silakan coba lagi.');
-                }
-
-                const data = await response.json();
-
-                if (data.success) {
-                    // ── Login berhasil → redirect langsung ──────────────
-                    // Tampilkan loading sebentar, lalu redirect
-                    if (btnText) btnText.textContent = 'Berhasil! Mengalihkan…';
-                    window.location.href = data.redirect;
+        $.ajax({
+            url: $form.attr('action'),
+            method: 'POST',
+            data: $form.serialize(),
+            dataType: 'json',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            success: function (res) {
+                if (res.success) {
+                    showAlert('success', res.message || 'Login berhasil...');
+                    // Redirect setelah sedikit delay agar user lihat pesan
+                    setTimeout(function () {
+                        window.location.href = res.redirect;
+                    }, 600);
                 } else {
-                    // ── Login gagal → SweetAlert2 ────────────────────────
-                    setLoadingState(false);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Login Gagal',
-                        text: data.message || 'Terjadi kesalahan. Silakan coba lagi.',
-                        confirmButtonText: 'Coba Lagi',
-                        confirmButtonColor: '#20a8a8',
-                        customClass: {
-                            popup: 'swal-custom-popup',
-                            title: 'swal-custom-title',
-                            confirmButton: 'swal-custom-confirm',
-                        },
-                    }).then(() => {
-                        // Fokus balik ke field yang relevan setelah dialog ditutup
-                        if (data.field === 'password') {
-                            passwordInput.value = '';
-                            passwordInput.focus();
-                        } else {
-                            usernameInput.focus();
-                        }
-                    });
-                }
+                    $btnLogin.removeClass('loading').prop('disabled', false);
+                    showAlert('error', res.message || 'Login gagal.');
 
-            } catch (err) {
-                setLoadingState(false);
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Koneksi Bermasalah',
-                    text: err.message || 'Tidak dapat terhubung ke server. Periksa koneksi Anda.',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#20a8a8',
-                });
+                    if (res.field === 'password') {
+                        showFieldError($('#inputPassword'), res.message);
+                    } else if (res.field === 'username') {
+                        showFieldError($('#inputUsername'), res.message);
+                    }
+                }
+            },
+            error: function (xhr) {
+                $btnLogin.removeClass('loading').prop('disabled', false);
+                let msg = 'Terjadi kesalahan. Silakan coba lagi.';
+                try {
+                    const res = JSON.parse(xhr.responseText);
+                    if (res.message) msg = res.message;
+                    if (res.field === 'password') showFieldError($('#inputPassword'), res.message);
+                } catch (err) { /* */ }
+                showAlert('error', msg);
             }
         });
-    }
+    });
 
+    // ── CSRF token refresh (opsional, jika CI4 CSRF aktif) ───────
 
-    // ══════════════════════════════════════
-    // LOADING STATE
-    // ══════════════════════════════════════
+    // Jika pakai CSRF token di form, uncomment ini:
+    // function refreshCsrfToken() { /* fetch token baru lalu update hidden input */ }
 
-    function setLoadingState(loading) {
-        if (!btnLogin) return;
-
-        btnLogin.disabled = loading;
-        btnLogin.style.opacity = loading ? '0.75' : '1';
-
-        if (btnText) btnText.textContent = loading ? 'Memproses…' : 'Masuk';
-
-        if (btnIcon) {
-            btnIcon.classList.toggle('fa-arrow-right', !loading);
-            btnIcon.classList.toggle('fa-circle-notch', loading);
-            btnIcon.classList.toggle('fa-spin', loading);
-        }
-    }
-
-
-    // ══════════════════════════════════════
-    // INLINE ALERT — client-side errors
-    // ══════════════════════════════════════
-
-    function showInlineAlert(message, type) {
-        clearInlineAlert();
-
-        const alertEl = document.createElement('div');
-        alertEl.id = 'inlineAlert';
-        alertEl.className = `alert alert-${type}`;
-        alertEl.innerHTML = `
-            <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i>
-            <span>${message}</span>
-        `;
-
-        loginForm.insertAdjacentElement('beforebegin', alertEl);
-
-        // Auto-dismiss setelah 5 detik
-        alertEl._timer = setTimeout(() => alertEl.remove(), 5000);
-    }
-
-    function clearInlineAlert() {
-        const old = document.getElementById('inlineAlert');
-        if (old) {
-            clearTimeout(old._timer);
-            old.remove();
-        }
-    }
-
-
-    // ══════════════════════════════════════
-    // AUTO-DISMISS FLASH ALERT (logout, dll)
-    // ══════════════════════════════════════
-
-    const flashAlert = document.getElementById('flashAlert');
-    if (flashAlert) {
-        setTimeout(() => {
-            flashAlert.style.transition = 'opacity 0.5s ease';
-            flashAlert.style.opacity = '0';
-            setTimeout(() => flashAlert.remove(), 500);
-        }, 4000);
-    }
-
-
-    // ══════════════════════════════════════
-    // HELPER — ambil base URL dari meta/script
-    // ══════════════════════════════════════
-
-    function getBaseUrl() {
-        // Coba ambil dari <meta name="base-url"> jika ada,
-        // fallback ke origin + '/'
-        const meta = document.querySelector('meta[name="base-url"]');
-        return meta ? meta.content.replace(/\/?$/, '/') : (window.location.origin + '/');
-    }
-
-})();
+});
