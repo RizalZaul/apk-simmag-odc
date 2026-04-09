@@ -52,10 +52,6 @@ class InstansiModel extends Model
 
     // ── Read Methods ────────────────────────────────────────────────
 
-    /**
-     * Semua instansi — format siap view + DataTables.
-     * Alamat ditampilkan sebagai "alamat, kota" untuk kolom tabel.
-     */
     public function getAllFormatted(): array
     {
         $rows = $this->select('id_instansi,

@@ -114,13 +114,6 @@ class KategoriModulModel extends Model
         return array_column($rows, 'nama_kat_m', 'id_kat_m');
     }
 
-    /**
-     * @deprecated Gunakan getForDashboard() — method ini dihapus
-     *             karena progress/selesai sudah tidak ditampilkan di dashboard PKL.
-     *             Dipertahankan untuk backward-compatibility jika ada kode lain
-     *             yang masih memanggilnya, tapi akan mengembalikan data tanpa
-     *             field progress dan selesai.
-     */
     public function getForPklDashboard(): array
     {
         return $this->getForDashboard();

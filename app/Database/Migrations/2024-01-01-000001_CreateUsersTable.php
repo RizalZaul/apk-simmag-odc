@@ -59,7 +59,6 @@ class CreateUsersTable extends Migration
         $this->forge->addUniqueKey('username');
         $this->forge->createTable('users');
 
-        // Case-sensitive collation untuk email dan username
         $this->db->query("ALTER TABLE `users` MODIFY `email` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL");
         $this->db->query("ALTER TABLE `users` MODIFY `username` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL");
     }

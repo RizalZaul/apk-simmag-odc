@@ -82,19 +82,6 @@ class PklModel extends Model
 
     // ── PKL Self-Service (dipakai ProfilPklController) ──────────────
 
-    /**
-     * Data lengkap satu PKL untuk halaman profil.
-     *
-     * FIX: Menambahkan field yang sebelumnya tidak di-select:
-     *   - k.nama_kelompok    → ditampilkan di section instansi
-     *   - k.status           → untuk badge aktif/selesai di durasi card
-     *   - i.kategori_instansi → penentu label Kampus/Sekolah
-     *   - i.kota_instansi    → ditampilkan di section instansi
-     *
-     * Keys: semua kolom pkl + id_instansi, tgl_mulai, tgl_akhir,
-     *       status, nama_kelompok, nama_pembimbing, no_wa_pembimbing,
-     *       nama_instansi, alamat_instansi, kategori_instansi, kota_instansi
-     */
     public function getDataDiri(int $idPkl): array
     {
         $row = $this->db->table('pkl p')
@@ -163,9 +150,6 @@ class PklModel extends Model
 
     /**
      * Update data pribadi PKL (field yang boleh diubah sendiri).
-     *
-     * FIX: Hapus manual 'updated_at' — serahkan ke $useTimestamps = true.
-     * Sama dengan fix di AdminModel::updateProfil().
      */
     public function updateDataDiri(int $idPkl, array $data): void
     {

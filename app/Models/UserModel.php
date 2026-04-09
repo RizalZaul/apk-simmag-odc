@@ -13,10 +13,6 @@ class UserModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
 
-    /*
-     * $useTimestamps = true → CI4 otomatis mengisi created_at & updated_at.
-     * Tidak ada manual timestamp di method manapun — serahkan ke CI4.
-     */
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
@@ -29,7 +25,6 @@ class UserModel extends Model
         'status',
         'kode_otp',
         'tenggat_otp',
-        // created_at & updated_at: dikelola CI4 via $useTimestamps, bukan di sini.
     ];
 
     protected $allowCallbacks = true;

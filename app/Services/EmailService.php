@@ -125,9 +125,6 @@ HTML;
   {
     $periode = tglShortIndo($kelompok['tgl_mulai']) . ' s/d ' . tglShortIndo($kelompok['tgl_akhir']);
 
-    // A4-FIX: Ganti tabel → card per anggota.
-    // Tabel 5 kolom butuh ~520px, tidak pernah nyaman di mobile portrait.
-    // Card layout vertikal tidak membutuhkan scroll horizontal sama sekali.
     $cards = '';
     foreach ($allAnggota as $idx => $a) {
       $no        = $idx + 1;

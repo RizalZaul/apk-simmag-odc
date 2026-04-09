@@ -6,38 +6,6 @@ use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
-/**
- * AuthFilter
- *
- * Filter tunggal yang menangani empat kondisi:
- *   1. Belum login                                        -> redirect ke auth/login
- *   2. Login tapi akun dinonaktifkan/dihapus admin        -> force logout + redirect ke auth/login
- *   3. Login tapi akses route 'admin' padahal role 'pkl'  -> redirect ke pkl/dashboard
- *   4. Login tapi akses route 'pkl' padahal role 'admin'  -> redirect ke /
- *
- * Cara pakai di Routes.php:
- *   $routes->group('/',    ['filter' => 'auth:admin'], ...);
- *   $routes->group('pkl',  ['filter' => 'auth:pkl'],   ...);
- *   $routes->get('auth/login', ..., ['filter' => 'auth:guest']);
- *
- * ============================================================
- * CHANGELOG / BUG FIX:
- * ============================================================
- *
- * [FIX 1] after() mengembalikan $response padahal seharusnya null
- *
- * [FIX 2] Request AJAX yang tidak terautentikasi mendapat redirect (HTML)
- *         bukan JSON 401.
- *
- * [FIX 3] Route POST auth/login tidak diproteksi filter guest.
- *         Ditangani langsung di AuthController::processLogin().
- *
- * [FIX 4] isAJAX() tidak ada di RequestInterface (base interface).
- *         FilterInterface::before() menerima RequestInterface, bukan
- *         IncomingRequest. Method isAJAX() hanya ada di IncomingRequest.
- *         Fix: cek header X-Requested-With secara langsung.
- * ============================================================
- */
 class AuthFilter implements FilterInterface
 {
     private const AUTH_MARKER_COOKIE = 'simmag_auth_marker';
@@ -48,13 +16,11 @@ class AuthFilter implements FilterInterface
         $session  = session();
         $loggedIn = $session->get('logged_in');
         $role     = $session->get('role');
-        $required = $arguments[0] ?? null; // 'admin' | 'pkl' | 'guest'
+        $required = $arguments[0] ?? null;
 
-        // [FIX 4] Gunakan getHeaderLine() — tersedia di RequestInterface
-        // isAJAX() hanya ada di IncomingRequest, tidak di RequestInterface
         $isAjax = $request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest';
 
-        // ── Kasus guest (halaman login) ──────────────────────────────────
+        // ── Kasus guest ──────────────────────────────────
         if ($required === 'guest') {
             if ($loggedIn) {
                 if ($isAjax) {
@@ -81,8 +47,8 @@ class AuthFilter implements FilterInterface
             $message = $hasLogoutMarker
                 ? 'Silakan login terlebih dahulu.'
                 : ($hasAuthMarker
-                ? 'Sesi Anda telah berakhir karena tidak aktif. Silakan login kembali.'
-                : 'Silakan login terlebih dahulu.');
+                    ? 'Sesi Anda telah berakhir karena tidak aktif. Silakan login kembali.'
+                    : 'Silakan login terlebih dahulu.');
 
             if ($isAjax) {
                 return $this->jsonUnauthorized($message);
@@ -140,9 +106,6 @@ class AuthFilter implements FilterInterface
         return null;
     }
 
-    /**
-     * [FIX 1] Return null, bukan $response.
-     */
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
         return null;

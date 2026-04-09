@@ -33,7 +33,7 @@ class CreateAnggotaTimTugasTable extends Migration
         ]);
 
         $this->forge->addKey('id_anggota_tim', true);
-        //                             kolom     tabel       ref       ON_UPDATE   ON_DELETE
+
         $this->forge->addForeignKey('id_tim', 'tim_tugas', 'id_tim', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('id_pkl', 'pkl',       'id_pkl', 'CASCADE', 'CASCADE');
         $this->forge->createTable('anggota_tim_tugas');

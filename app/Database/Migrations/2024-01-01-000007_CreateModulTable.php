@@ -44,7 +44,7 @@ class CreateModulTable extends Migration
         ]);
 
         $this->forge->addKey('id_modul', true);
-        //                             kolom      tabel            ref        ON_UPDATE   ON_DELETE
+
         $this->forge->addForeignKey('id_kat_m', 'kategori_modul', 'id_kat_m', 'CASCADE', 'RESTRICT');
         $this->forge->createTable('modul');
     }
