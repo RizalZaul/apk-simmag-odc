@@ -13,14 +13,6 @@ class AdminModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
 
-    /*
-     * $useTimestamps = true → CI4 otomatis mengisi created_at saat insert
-     * dan updated_at saat update, TANPA perlu ditambahkan manual ke $data.
-     * Menambahkan 'updated_at' secara manual ke array data adalah anti-pattern:
-     * field tersebut bukan bagian dari $allowedFields sehingga akan di-strip
-     * oleh $protectFields, lalu CI4 menambahkannya kembali via timestamp handler
-     * — double-handling yang tidak perlu dan berpotensi race condition.
-     */
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
@@ -31,8 +23,6 @@ class AdminModel extends Model
         'nama_panggilan',
         'no_wa_admin',
         'alamat',
-        // Catatan: created_at & updated_at SENGAJA tidak di sini.
-        // CI4 mengelolanya sendiri via $useTimestamps — bukan lewat $allowedFields.
     ];
 
     // ── Custom Methods ──────────────────────────────────────────────
@@ -79,8 +69,6 @@ class AdminModel extends Model
      * Ambil field profil admin dari DB untuk halaman profil.
      * Selalu baca dari DB, bukan session — supaya perubahan langsung
      * terlihat tanpa perlu re-login.
-     *
-     * Keys: nama_lengkap, nama_panggilan, no_wa_admin, alamat
      */
     public function getExtraProfil(int $idAdmin): array
     {
@@ -98,10 +86,6 @@ class AdminModel extends Model
 
     /**
      * Update profil admin (nama, panggilan, no_wa, alamat).
-     *
-     * FIX: Tidak lagi meng-inject 'updated_at' manual.
-     * $useTimestamps = true sudah otomatis mengisi updated_at
-     * di setiap pemanggilan update() — ini cara yang benar di CI4.
      */
     public function updateProfil(int $idAdmin, array $data): void
     {

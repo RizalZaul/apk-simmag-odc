@@ -1,16 +1,5 @@
 <?php
 
-/**
- * app/Helpers/tgl_helper.php
- *
- * Helper tanggal — tersedia global setelah di-autoload di app/Config/Autoload.php
- * atau dipanggil manual dengan: helper('tgl');
- *
- * Autoload: tambahkan 'tgl' ke $helpers di app/Config/Autoload.php
- * Contoh:
- *   public $helpers = ['tgl'];
- */
-
 if (! function_exists('tglShortIndo')) {
     /**
      * Format tanggal ke format Indonesia singkat.
@@ -28,10 +17,7 @@ if (! function_exists('tglShortIndo')) {
 }
 
 if (! function_exists('hitungDurasi')) {
-    /**
-     * Hitung durasi antara dua tanggal.
-     * Return: '2 Bulan 5 Hari' atau '45 Hari'
-     */
+
     function hitungDurasi(?string $mulai, ?string $akhir): string
     {
         if (! $mulai || ! $akhir) return '-';

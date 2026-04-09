@@ -45,7 +45,7 @@ class CreateItemTugasTable extends Migration
         ]);
 
         $this->forge->addKey('id_item', true);
-        //                             kolom                  tabel               ref                    ON_UPDATE   ON_DELETE
+
         $this->forge->addForeignKey('id_pengumpulan_tgs', 'pengumpulan_tugas', 'id_pengumpulan_tgs', 'CASCADE', 'CASCADE');
         $this->forge->createTable('item_tugas');
     }

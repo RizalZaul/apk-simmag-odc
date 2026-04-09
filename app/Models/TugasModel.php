@@ -13,11 +13,6 @@ use CodeIgniter\Model;
  *   tugas       → tugas_sasaran   (target penerima: individu / kelompok / tim_tugas)
  *   tugas       → pengumpulan_tugas (hasil kumpul PKL)
  *   tugas_sasaran + anggota_tim_tugas → menentukan siapa saja penerima tugas
- *
- * Catatan query complex:
- *   Karena penerima tugas bisa dari 3 jalur berbeda (individu, kelompok, tim),
- *   method getDashboardAdmin() dan getDashboardPkl() menggunakan raw SQL
- *   dengan subquery untuk menghitung total_penerima dan sudah_kumpul secara akurat.
  */
 class TugasModel extends Model
 {
@@ -172,24 +167,6 @@ class TugasModel extends Model
     {
         if (! $idPkl) return [];
 
-        // FIX: Ganti SELECT DISTINCT + correlated EXISTS subqueries dengan
-        // GROUP BY + LEFT JOIN item_tugas langsung + SUM/COUNT aggregates.
-        //
-        // Pola lama (SELECT DISTINCT + CASE...EXISTS) bermasalah di MySQL
-        // karena optimizer bisa salah melakukan predicate-pushdown pada
-        // correlated subquery di dalam CASE, terutama saat pt (LEFT JOIN)
-        // bernilai NULL — akibatnya nilai semua_diterima / ada_revisi keliru
-        // dan tugas yang seharusnya tampil malah tersaring.
-        //
-        // Pendekatan baru dengan GROUP BY + SUM/COUNT bersifat deterministik
-        // dan bekerja benar di semua versi MySQL.
-        /*
-         * CATATAN: Tidak ada komentar SQL (--) di dalam string query.
-         * CI4 MySQLi driver mem-parsing sendiri placeholder (?) sebelum
-         * dikirim ke MySQLi prepared statement. Komentar -- di dalam
-         * string query memutus proses parsing tersebut sehingga MySQL
-         * menerima literal '?' dan melempar syntax error.
-         */
         $sql = "
             SELECT
                 t.id_tugas,
@@ -242,10 +219,10 @@ class TugasModel extends Model
 
         try {
             return $this->db->query($sql, [
-                $idPkl,       // LEFT JOIN pt.id_pkl = ?
-                $idPkl,       // WHERE individu
-                $idKelompok,  // WHERE kelompok
-                $idPkl,       // WHERE tim_tugas subquery
+                $idPkl,
+                $idPkl,
+                $idKelompok,
+                $idPkl,
             ])->getResultArray();
         } catch (\Exception $e) {
             log_message('warning', '[TugasModel::getDashboardPkl] ' . $e->getMessage());
@@ -354,24 +331,24 @@ class TugasModel extends Model
             ])->getRow()->total ?? 0);
 
             $selesai = (int) ($this->db->query($sqlSelesai, [
-                $idPkl,                        // JOIN pt.id_pkl = ?
+                $idPkl,
                 $idPkl,
                 $idKelompok,
-                $idPkl,   // WHERE sasaran
+                $idPkl,
             ])->getRow()->selesai ?? 0);
 
             $pending = (int) ($this->db->query($sqlPending, [
-                $idPkl,                        // JOIN pt.id_pkl = ?
+                $idPkl,
                 $idPkl,
                 $idKelompok,
-                $idPkl,   // WHERE sasaran
+                $idPkl,
             ])->getRow()->pending ?? 0);
 
             $belumDikirim = (int) ($this->db->query($sqlBelumDikirim, [
-                $idPkl,                        // LEFT JOIN pt.id_pkl = ?
+                $idPkl,
                 $idPkl,
                 $idKelompok,
-                $idPkl,   // WHERE sasaran
+                $idPkl,
             ])->getRow()->belum_dikirim ?? 0);
 
             return [

@@ -25,17 +25,17 @@ class CreateTugasSasaranTable extends Migration
             'id_pkl' => [
                 'type'     => 'INT',
                 'unsigned' => true,
-                'null'     => true, // NULL jika bukan individu
+                'null'     => true,
             ],
             'id_kelompok' => [
                 'type'     => 'INT',
                 'unsigned' => true,
-                'null'     => true, // NULL jika bukan kelompok
+                'null'     => true,
             ],
             'id_tim' => [
                 'type'     => 'INT',
                 'unsigned' => true,
-                'null'     => true, // NULL jika bukan tim
+                'null'     => true,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -48,7 +48,7 @@ class CreateTugasSasaranTable extends Migration
         ]);
 
         $this->forge->addKey('id_sasaran', true);
-        //                             kolom          tabel          ref             ON_UPDATE   ON_DELETE
+
         $this->forge->addForeignKey('id_tugas',    'tugas',        'id_tugas',    'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('id_pkl',      'pkl',          'id_pkl',      'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('id_kelompok', 'kelompok_pkl', 'id_kelompok', 'CASCADE', 'CASCADE');

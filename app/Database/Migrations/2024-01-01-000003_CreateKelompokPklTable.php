@@ -17,17 +17,17 @@ class CreateKelompokPklTable extends Migration
             'id_instansi' => [
                 'type'     => 'INT',
                 'unsigned' => true,
-                'null'     => true, // NULL = mandiri
+                'null'     => true,
             ],
             'nama_kelompok' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
-                'null'       => true, // NULL = mandiri
+                'null'       => true,
             ],
             'nama_pembimbing' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
-                'null'       => true, // NULL = mandiri
+                'null'       => true,
             ],
             'no_wa_pembimbing' => [
                 'type'       => 'VARCHAR',
@@ -57,7 +57,7 @@ class CreateKelompokPklTable extends Migration
 
         $this->forge->addKey('id_kelompok', true);
         $this->forge->addUniqueKey('nama_kelompok');
-        //                             kolom         tabel      ref          ON_UPDATE   ON_DELETE
+
         $this->forge->addForeignKey('id_instansi', 'instansi', 'id_instansi', 'CASCADE', 'RESTRICT');
         $this->forge->createTable('kelompok_pkl');
     }

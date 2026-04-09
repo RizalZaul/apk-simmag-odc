@@ -16,9 +16,9 @@ class TugasSasaranModel extends Model
 
     protected $allowedFields = [
         'id_tugas',
-        'target_tipe',   // enum: individu, kelompok, tim_tugas
-        'id_pkl',        // Terisi jika target_tipe = individu
-        'id_kelompok',   // Terisi jika target_tipe = kelompok
-        'id_tim',        // Terisi jika target_tipe = tim_tugas
+        'target_tipe',
+        'id_pkl',
+        'id_kelompok',
+        'id_tim',
     ];
 }

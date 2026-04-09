@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class ItemTugasModel extends Model
 {
-    protected $table            = 'item_tugas';            // ← FIX: was 'itemtugas'
-    protected $primaryKey       = 'id_item';               // ← FIX: was 'id'
+    protected $table            = 'item_tugas';
+    protected $primaryKey       = 'id_item';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
@@ -35,18 +35,6 @@ class ItemTugasModel extends Model
     // QUERY METHODS
     // ==========================================
 
-    /**
-     * BUG-06 FIX: Ambil semua item tugas untuk satu record pengumpulan.
-     *
-     * Menggantikan raw SQL inline di PklTugasController::detail() agar
-     * query terpusat di model dan controller tetap tipis.
-     *
-     * Setiap item di-map statusnya via PengumpulanTugasModel::mapItemStatus()
-     * sehingga view menerima key 'status' (human-readable) bukan 'status_item' (raw).
-     *
-     * @param int $idPengumpulan  id_pengumpulan_tgs
-     * @return array  Array of items: [id, tipe, data, status, komentar, created_at]
-     */
     public function getByPengumpulan(int $idPengumpulan): array
     {
         $rows = $this->db

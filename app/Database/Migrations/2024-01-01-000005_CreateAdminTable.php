@@ -47,8 +47,8 @@ class CreateAdminTable extends Migration
         ]);
 
         $this->forge->addKey('id_admin', true);
-        $this->forge->addUniqueKey('id_user'); // Enforce relasi 1:1 dengan Users
-        //                             kolom     tabel    ref        ON_UPDATE   ON_DELETE
+        $this->forge->addUniqueKey('id_user');
+
         $this->forge->addForeignKey('id_user', 'users', 'id_user', 'CASCADE', 'CASCADE');
         $this->forge->createTable('admin');
     }
