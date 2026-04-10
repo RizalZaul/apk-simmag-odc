@@ -520,6 +520,7 @@ class BiodataPklController extends BaseController
         $kategori = (string) ($payload['kategori'] ?? 'mandiri');
         $tglMulai = (string) ($payload['tgl_mulai'] ?? '');
         $tglAkhir = (string) ($payload['tgl_akhir'] ?? '');
+        $jumlahAnggotaValue = $this->resolveJumlahAnggota($payload);
         $totalRequiredStep1 = 2;
         $missingStep1 = [];
 
@@ -691,6 +692,8 @@ class BiodataPklController extends BaseController
 
     private function normalizeStorePayload(array $payload): array
     {
+        $jumlahAnggotaValue = $this->resolveJumlahAnggota($payload);
+
         $payload['tgl_mulai'] = trim((string) ($payload['tgl_mulai'] ?? ''));
         $payload['tgl_akhir'] = trim((string) ($payload['tgl_akhir'] ?? ''));
         $payload['nama_kelompok'] = $this->normalizeSingleSpaces((string) ($payload['nama_kelompok'] ?? ''));
@@ -730,6 +733,26 @@ class BiodataPklController extends BaseController
         }
 
         return $payload;
+    }
+
+    private function resolveJumlahAnggota(array $payload): ?string
+    {
+        $kategori = (string) ($payload['kategori'] ?? 'mandiri');
+        if ($kategori !== 'instansi') {
+            return '1';
+        }
+
+        $jumlahAnggota = trim((string) ($payload['jumlah_anggota'] ?? ''));
+        if ($jumlahAnggota !== '') {
+            return $jumlahAnggota;
+        }
+
+        $anggotaArr = is_array($payload['anggota'] ?? null) ? $payload['anggota'] : [];
+        if ($anggotaArr === []) {
+            return null;
+        }
+
+        return (string) count($anggotaArr);
     }
 
     private function validateBirthDateValue(?string $value): ?string
