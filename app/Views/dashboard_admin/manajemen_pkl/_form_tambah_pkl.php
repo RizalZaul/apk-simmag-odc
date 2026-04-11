@@ -1,16 +1,11 @@
 <?php
 
-/**
- * Views/dashboard_admin/manajemen_pkl/_form_tambah_pkl.php
- * Form Tambah PKL — 3 Step Wizard
- */
 $kotaListJson    = json_encode($kotaList ?? [], JSON_UNESCAPED_UNICODE);
 $instansiJson    = json_encode(array_values($instansiList ?? []), JSON_UNESCAPED_UNICODE);
 $urlCheckEmail   = base_url('admin/manajemen-pkl/pkl/check-email');
 $urlStore        = base_url('admin/manajemen-pkl/pkl/store');
 $urlKembali      = base_url('admin/manajemen-pkl?tab=pkl');
 
-// Tanggal batas
 $today    = date('Y-m-d');
 $minMulai = date('Y-m-d', strtotime('-14 days'));
 $maxMulai = date('Y-m-d', strtotime('+3 months'));
@@ -18,7 +13,6 @@ $maxMulai = date('Y-m-d', strtotime('+3 months'));
 
 <div class="wizard-wrap">
 
-    <!-- ── Step Indicator ── -->
     <div class="wizard-steps">
         <div class="wizard-step active" id="step-ind-1">
             <div class="step-circle">1</div>
@@ -36,7 +30,6 @@ $maxMulai = date('Y-m-d', strtotime('+3 months'));
         </div>
     </div>
 
-    <!-- ══ STEP 1: Data PKL ══ -->
     <div class="wizard-panel active" id="panel-1">
         <div class="wizard-card">
             <div class="wizard-card-header">
@@ -49,7 +42,6 @@ $maxMulai = date('Y-m-d', strtotime('+3 months'));
             <div class="wizard-card-divider"></div>
             <div class="wizard-form-body">
 
-                <!-- Kategori PKL -->
                 <div class="wizard-field wizard-field-full">
                     <label class="wizard-label">
                         <i class="fas fa-tags"></i> Kategori PKL <span class="required-star">*</span>
@@ -68,7 +60,6 @@ $maxMulai = date('Y-m-d', strtotime('+3 months'));
                     </div>
                 </div>
 
-                <!-- Field Instansi (hidden jika mandiri) -->
                 <div id="fieldInstansiGroup" style="display:none" class="wizard-field-group">
 
                     <div class="wizard-field">
@@ -92,7 +83,6 @@ $maxMulai = date('Y-m-d', strtotime('+3 months'));
                         <span class="mpkl-hint"><i class="fas fa-info-circle"></i> Ketik nama instansi baru jika tidak ada dalam pilihan</span>
                     </div>
 
-                    <!-- Field tambahan jika instansi baru -->
                     <div id="fieldInstansiBaru" style="display:none" class="wizard-field wizard-field-full">
                         <label class="wizard-label"><i class="fas fa-map-marker-alt"></i> Alamat Instansi Baru <span class="required-star">*</span></label>
                         <textarea id="s1AlamatInstansi" class="wizard-textarea" placeholder="Masukkan alamat instansi baru" maxlength="100" rows="3"></textarea>
@@ -137,7 +127,6 @@ $maxMulai = date('Y-m-d', strtotime('+3 months'));
 
                 </div>
 
-                <!-- Tanggal -->
                 <div class="wizard-field">
                     <label class="wizard-label">
                         <i class="fas fa-calendar-alt"></i> Tanggal Mulai PKL <span class="required-star">*</span>
@@ -166,7 +155,6 @@ $maxMulai = date('Y-m-d', strtotime('+3 months'));
         </div>
     </div>
 
-    <!-- ══ STEP 2: Biodata Anggota ══ -->
     <div class="wizard-panel" id="panel-2" style="display:none">
         <div class="wizard-card">
             <div class="wizard-card-header">
@@ -177,7 +165,6 @@ $maxMulai = date('Y-m-d', strtotime('+3 months'));
                 </div>
             </div>
             <div class="wizard-card-divider"></div>
-            <!-- Accordion anggota di-generate oleh JS berdasarkan jumlah anggota -->
             <div id="accordionAnggota"></div>
         </div>
 
@@ -191,7 +178,6 @@ $maxMulai = date('Y-m-d', strtotime('+3 months'));
         </div>
     </div>
 
-    <!-- ══ STEP 3: Konfirmasi ══ -->
     <div class="wizard-panel" id="panel-3" style="display:none">
         <div class="wizard-card">
             <div class="wizard-card-header">
@@ -202,7 +188,6 @@ $maxMulai = date('Y-m-d', strtotime('+3 months'));
                 </div>
             </div>
             <div class="wizard-card-divider"></div>
-            <!-- Di-render oleh JS -->
             <div id="konfirmasiContent"></div>
         </div>
 

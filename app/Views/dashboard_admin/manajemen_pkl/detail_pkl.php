@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Views/dashboard_admin/manajemen_pkl/detail_pkl.php
- */
-
 function tglIndoShort(?string $d): string
 {
     if (!$d) return '-';

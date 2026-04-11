@@ -1,20 +1,13 @@
 <?php
 
-/**
- * Layouts/sidebar_pkl.php
- * Variables: $active_menu
- */
-
 $activeMenu = $active_menu ?? 'dashboard';
 $panggilan  = session()->get('panggilan') ?: session()->get('nama') ?: 'PKL';
 ?>
 
 <aside class="dashboard-sidebar" id="dashboardSidebar">
 
-    <!-- ══ TOP ══ -->
     <div class="sidebar-top">
 
-        <!-- Logo -->
         <div class="sidebar-logo">
             <img src="<?= base_url('assets/images/logo.png') ?>"
                 alt="OurWeb.id"
@@ -23,7 +16,6 @@ $panggilan  = session()->get('panggilan') ?: session()->get('nama') ?: 'PKL';
                 data-logo-small="<?= base_url('assets/images/logo_2.png') ?>">
         </div>
 
-        <!-- Navigation -->
         <ul class="sidebar-menu">
 
             <li class="menu-item <?= $activeMenu === 'dashboard' ? 'active' : '' ?>">
@@ -50,7 +42,6 @@ $panggilan  = session()->get('panggilan') ?: session()->get('nama') ?: 'PKL';
         </ul>
     </div>
 
-    <!-- ══ BOTTOM / PROFILE ══ -->
     <div class="sidebar-bottom">
 
         <div class="sidebar-profile" id="profileToggle">

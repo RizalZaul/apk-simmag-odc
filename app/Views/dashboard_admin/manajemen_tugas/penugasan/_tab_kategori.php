@@ -1,13 +1,9 @@
 <?php
 
-/**
- * Views/dashboard_admin/manajemen_tugas/penugasan/_tab_kategori.php
- */
 ?>
 
 <div class="mpkl-card">
 
-    <!-- ── Toolbar: Custom Search + Reset + Tambah ── -->
     <div class="mpkl-toolbar mtugas-toolbar-between">
         <div class="mtugas-search-toolbar mtugas-search-toolbar-wide">
             <div class="mtugas-search-field">
@@ -24,7 +20,6 @@
         </button>
     </div>
 
-    <!-- ── Panel Form Tambah / Edit (hidden by default) ── -->
     <div id="panelFormKategori" style="display:none">
         <div class="mpkl-filter-panel">
             <div class="filter-panel-header">

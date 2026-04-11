@@ -1,25 +1,3 @@
-/**
- * SIMMAG ODC — Profil PKL JS
- * public/assets/js/modules/pkl/profil.js
- *
- * Fitur:
- *   1. URL Param Helpers (setUrlParam, removeUrlParam, getUrlParam)
- *   2. Track currentEditMode + konfirmasi konflik antar section (SweetAlert)
- *   3. Inline edit: Informasi Pribadi (termasuk Flatpickr untuk tgl_lahir)
- *      — enter/exit sync URL param ?mode=edit_biodata
- *   4. Inline edit: Ubah Password + password strength indicator
- *      — enter/exit sync URL param ?mode=edit_password
- *   5. Auto-enter edit mode saat page load berdasarkan URL param ?mode=
- *      (refresh halaman tetap di mode edit)
- *   6. Toggle show/hide password
- *
- * Catatan Flatpickr:
- *   - Diinit LAZY saat pertama kali masuk edit mode
- *   - Input tgl_lahir dibungkus #wrapTglLahir agar show/hide bersih
- *   - altInput: true  → Flatpickr buat input tampilan "d M Y" di dalam wrapper
- *   - dateFormat: "Y-m-d" → value dikirim ke server tetap format Y-m-d
- */
-
 document.addEventListener('DOMContentLoaded', function () {
     if (window.SimmagValidation && typeof window.SimmagValidation.applyInputRules === 'function') {
         window.SimmagValidation.applyInputRules([
@@ -32,9 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
         ]);
     }
 
-    /* ══════════════════════════════════════════════════════════ */
-    /* 1. URL PARAM HELPERS                                       */
-    /* ══════════════════════════════════════════════════════════ */
 
     function setUrlParam(key, value) {
         var url = new URL(window.location.href);
@@ -60,21 +35,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return 'Field berikut wajib diisi: ' + labels.join(', ') + '.';
     }
 
-    /* ══════════════════════════════════════════════════════════ */
-    /* 2. TRACK MODE EDIT AKTIF                                   */
-    /*                                                            */
-    /* currentEditMode menyimpan section mana yang sedang edit:  */
-    /*   null | 'biodata' | 'password'                           */
-    /* Jika user klik Edit saat section lain terbuka → konfirmasi */
-    /* SweetAlert sebelum berpindah.                              */
-    /* ══════════════════════════════════════════════════════════ */
-
     var currentEditMode = null;
 
-    /**
-     * Cek apakah ada section lain yang sedang edit.
-     * resolve(true) = lanjut berpindah, resolve(false) = batal.
-     */
     function confirmSwitchEdit(targetMode) {
         return new Promise(function (resolve) {
             if (!currentEditMode || currentEditMode === targetMode) {
@@ -100,16 +62,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    /* ══════════════════════════════════════════════════════════ */
-    /* 3. INLINE EDIT: INFORMASI PRIBADI                          */
-    /* ══════════════════════════════════════════════════════════ */
 
     var btnEditBiodata = document.getElementById('btnEditBiodata');
     var btnCancelBiodata = document.getElementById('btnCancelBiodata');
     var actionsBiodata = document.getElementById('actionsBiodata');
 
-    // Field standar (display <-> input toggle)
-    // tgl_lahir DIKECUALIKAN — dihandle via Flatpickr + #wrapTglLahir
     var biodataFields = [
         { displayId: 'displayNamaLengkap', inputId: 'inputNamaLengkap' },
         { displayId: 'displayNamaPanggilan', inputId: 'inputNamaPanggilan' },
@@ -238,9 +195,6 @@ document.addEventListener('DOMContentLoaded', function () {
         btnCancelBiodata.addEventListener('click', function () { exitBiodataEdit(true); });
     }
 
-    /* ══════════════════════════════════════════════════════════ */
-    /* 4. INLINE EDIT: PASSWORD                                   */
-    /* ══════════════════════════════════════════════════════════ */
 
     var btnEditPassword = document.getElementById('btnEditPassword');
     var btnCancelPassword = document.getElementById('btnCancelPassword');
@@ -296,12 +250,6 @@ document.addEventListener('DOMContentLoaded', function () {
         btnCancelPassword.addEventListener('click', function () { exitPasswordEdit(); });
     }
 
-    /* ══════════════════════════════════════════════════════════ */
-    /* 5. AUTO-ENTER EDIT MODE SAAT PAGE LOAD                     */
-    /*                                                            */
-    /* Baca URL param ?mode= dan langsung masuk edit mode yang    */
-    /* sesuai. Membuat refresh tetap di mode edit.                */
-    /* ══════════════════════════════════════════════════════════ */
 
     var initMode = getUrlParam('mode');
     if (initMode === 'edit_biodata') {
@@ -310,9 +258,6 @@ document.addEventListener('DOMContentLoaded', function () {
         enterPasswordEdit();
     }
 
-    /* ══════════════════════════════════════════════════════════ */
-    /* 6. SHOW/HIDE PASSWORD                                      */
-    /* ══════════════════════════════════════════════════════════ */
 
     document.querySelectorAll('.btn-toggle-pw').forEach(function (btn) {
         btn.addEventListener('click', function () {
@@ -325,9 +270,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    /* ══════════════════════════════════════════════════════════ */
-    /* 7. PASSWORD STRENGTH INDICATOR                             */
-    /* ══════════════════════════════════════════════════════════ */
 
     var inputPasswordBaru = document.getElementById('inputPasswordBaru');
     var strengthFill = document.getElementById('strengthFill');

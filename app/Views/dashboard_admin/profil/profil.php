@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Views/dashboard_admin/profil/profil.php
- *
- * FIX: Section link biodata token dipindah ke DALAM .profil-section
- *      agar mendapat styling card yang benar.
- */
-
 $namaLengkap   = esc($admin['nama_lengkap']   ?? '');
 $namaPanggilan = esc($admin['nama_panggilan'] ?? '');
 $noWa          = esc($admin['no_wa_admin']    ?? '');
@@ -47,13 +40,11 @@ $swalError   = session()->getFlashdata('swal_error');
     </script>
 <?php endif; ?>
 
-<!-- ── Welcome Card ── -->
 <div class="welcome-card">
     <h2 class="page-heading"><?= esc($page_title ?? 'Profil Saya') ?></h2>
     <p class="page-subheading"><?= esc($page_subheading ?? 'Data diri dan informasi akun') ?></p>
 </div>
 
-<!-- ══ TAB NAVIGATION ══ -->
 <div class="profil-tab-nav">
     <button class="profil-tab-btn <?= $active_tab === 'biodata'  ? 'active' : '' ?>"
         data-tab="biodata">
@@ -67,13 +58,9 @@ $swalError   = session()->getFlashdata('swal_error');
     </button>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- TAB: BIO PRIBADI                                              -->
-<!-- ══════════════════════════════════════════════════════════════ -->
 <div class="profil-tab-content <?= $active_tab === 'biodata' ? 'active' : '' ?>"
     id="tab-biodata">
 
-    <!-- Avatar Card -->
     <div class="profil-avatar-card">
         <div class="profil-avatar-circle">
             <i class="fas fa-user-tie"></i>
@@ -89,7 +76,6 @@ $swalError   = session()->getFlashdata('swal_error');
         </div>
     </div>
 
-    <!-- ── SECTION: Informasi Pribadi ── -->
     <div class="profil-section">
         <div class="profil-section-header">
             <div class="profil-section-title">
@@ -106,7 +92,6 @@ $swalError   = session()->getFlashdata('swal_error');
 
             <div class="profil-field-grid">
 
-                <!-- Nama Lengkap -->
                 <div class="profil-field">
                     <label><i class="fas fa-user"></i> Nama Lengkap <span class="required-star">*</span></label>
                     <div class="profil-field-display" id="displayNamaLengkap"><?= $namaLengkap ?></div>
@@ -114,7 +99,6 @@ $swalError   = session()->getFlashdata('swal_error');
                         value="<?= $namaLengkap ?>" id="inputNamaLengkap" style="display:none" required>
                 </div>
 
-                <!-- Nama Panggilan -->
                 <div class="profil-field">
                     <label><i class="fas fa-smile"></i> Nama Panggilan <span class="required-star">*</span></label>
                     <div class="profil-field-display" id="displayNamaPanggilan"><?= $namaPanggilan ?: '-' ?></div>
@@ -122,7 +106,6 @@ $swalError   = session()->getFlashdata('swal_error');
                         value="<?= $namaPanggilan ?>" id="inputNamaPanggilan" style="display:none" required>
                 </div>
 
-                <!-- Username (locked) -->
                 <div class="profil-field">
                     <label>
                         <i class="fas fa-at"></i> Username
@@ -131,7 +114,6 @@ $swalError   = session()->getFlashdata('swal_error');
                     <div class="profil-field-display field-locked"><?= $username ?></div>
                 </div>
 
-                <!-- Email -->
                 <div class="profil-field">
                     <label><i class="fas fa-envelope"></i> Email <span class="required-star">*</span></label>
                     <div class="profil-field-display" id="displayEmail"><?= $email ?></div>
@@ -139,7 +121,6 @@ $swalError   = session()->getFlashdata('swal_error');
                         value="<?= $email ?>" id="inputEmail" style="display:none" required>
                 </div>
 
-                <!-- No. WhatsApp -->
                 <div class="profil-field">
                     <label><i class="fab fa-whatsapp"></i> No. WhatsApp <span class="required-star">*</span></label>
                     <div class="profil-field-display" id="displayNoWa"><?= $noWa ?: '-' ?></div>
@@ -147,7 +128,6 @@ $swalError   = session()->getFlashdata('swal_error');
                         value="<?= $noWa ?>" id="inputNoWa" style="display:none" required>
                 </div>
 
-                <!-- Alamat (full width) -->
                 <div class="profil-field profil-field-full">
                     <label><i class="fas fa-map-marker-alt"></i> Alamat <span class="required-star">*</span></label>
                     <div class="profil-field-display multiline" id="displayAlamat"><?= $alamat !== '' ? nl2br($alamat) : '-' ?></div>
@@ -157,7 +137,6 @@ $swalError   = session()->getFlashdata('swal_error');
 
             </div>
 
-            <!-- Action buttons -->
             <div class="profil-edit-actions" id="actionsBiodata" style="display:none">
                 <button type="button" class="btn-profil-cancel" id="btnCancelBiodata">
                     <i class="fas fa-times"></i> Batal
@@ -169,7 +148,6 @@ $swalError   = session()->getFlashdata('swal_error');
         </form>
     </div>
 
-    <!-- ── SECTION: Ubah Password ── -->
     <div class="profil-section">
         <div class="profil-section-header">
             <div class="profil-section-title">
@@ -186,7 +164,6 @@ $swalError   = session()->getFlashdata('swal_error');
 
             <div class="profil-field-grid">
 
-                <!-- Password Baru -->
                 <div class="profil-field">
                     <label><i class="fas fa-key"></i> Password Baru</label>
                     <div class="profil-field-display pw-display-placeholder">
@@ -216,7 +193,6 @@ $swalError   = session()->getFlashdata('swal_error');
                     </div>
                 </div>
 
-                <!-- Konfirmasi Password -->
                 <div class="profil-field">
                     <label><i class="fas fa-key"></i> Konfirmasi Password</label>
                     <div class="profil-field-display pw-display-placeholder">
@@ -247,15 +223,11 @@ $swalError   = session()->getFlashdata('swal_error');
         </form>
     </div>
 
-</div><!-- end #tab-biodata -->
+</div>
 
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- TAB: PENGATURAN FORM BIODATA PKL                              -->
-<!-- ══════════════════════════════════════════════════════════════ -->
 <div class="profil-tab-content <?= $active_tab === 'setting' ? 'active' : '' ?>"
     id="tab-setting">
 
-    <!-- ══ SATU section card memuat toggle + link sekaligus ══ -->
     <div class="profil-section">
         <div class="profil-section-header">
             <div class="profil-section-title">
@@ -264,7 +236,6 @@ $swalError   = session()->getFlashdata('swal_error');
             </div>
         </div>
 
-        <!-- Toggle aktif/nonaktif -->
         <div class="setting-toggle-card">
             <div class="setting-toggle-info">
                 <div class="setting-toggle-icon">
@@ -288,7 +259,6 @@ $swalError   = session()->getFlashdata('swal_error');
             </div>
         </div>
 
-        <!-- Status info -->
         <div class="setting-status-info <?= $form_biodata_aktif ? 'info-aktif' : 'info-nonaktif' ?>"
             id="settingStatusInfo">
             <i class="fas <?= $form_biodata_aktif ? 'fa-check-circle' : 'fa-times-circle' ?>"></i>
@@ -301,8 +271,6 @@ $swalError   = session()->getFlashdata('swal_error');
             </span>
         </div>
 
-        <!-- ══ Divider & Link Form Biodata ══ -->
-        <!-- FIX: section ini sekarang di DALAM .profil-section agar tampil dalam card -->
         <div class="setting-link-divider">
             <i class="fas fa-link"></i>
             <span>Link Form Pendaftaran PKL</span>
@@ -345,6 +313,6 @@ $swalError   = session()->getFlashdata('swal_error');
             </div>
         <?php endif; ?>
 
-    </div><!-- end .profil-section -->
+    </div>
 
-</div><!-- end #tab-setting -->
+</div>

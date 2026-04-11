@@ -1,12 +1,4 @@
-/**
- * SIMMAG ODC — Dashboard Core JS
- * public/assets/js/core/dashboard.js
- * Dependency: jQuery
- */
-
 $(document).ready(function () {
-
-    // ── Logo update berdasarkan state collapsed ──────────────────
 
     function updateLogo() {
         var $logo = $('.logo-image');
@@ -24,8 +16,6 @@ $(document).ready(function () {
         }
     }
 
-    // ── Restore collapsed state dari localStorage ────────────────
-
     var isDesktop = function () { return $(window).width() >= 992; };
 
     try {
@@ -37,15 +27,12 @@ $(document).ready(function () {
 
     updateLogo();
 
-    // ── Toggle hamburger (desktop: collapse/expand, mobile: open) ─
-
     $('#menuToggle').on('click', function () {
         if (isDesktop()) {
             var $sidebar = $('.dashboard-sidebar');
             $sidebar.toggleClass('collapsed');
             $('#dashboardMain').toggleClass('sidebar-collapsed', $sidebar.hasClass('collapsed'));
             updateLogo();
-            // FIX 3: tutup profile dropdown saat sidebar di-collapse
             if ($sidebar.hasClass('collapsed')) {
                 $('#profileDropdown').removeClass('show');
                 $('#profileToggle').removeClass('active');
@@ -60,8 +47,6 @@ $(document).ready(function () {
             $('body').css('overflow', 'hidden');
         }
     });
-
-    // ── Hover expand/collapse (desktop only) ────────────────────
 
     $('.dashboard-sidebar').on('mouseenter', function () {
         if (isDesktop() && $(this).hasClass('collapsed')) {
@@ -81,15 +66,12 @@ $(document).ready(function () {
         }
     });
 
-    // ── Mobile overlay close ─────────────────────────────────────
-
     $('#sidebarOverlay').on('click', function () {
         $('.dashboard-sidebar').removeClass('mobile-open');
         $(this).removeClass('visible');
         $('body').css('overflow', '');
     });
 
-    // Resize: tutup mobile sidebar saat ke desktop
     $(window).on('resize', function () {
         if (isDesktop()) {
             $('.dashboard-sidebar').removeClass('mobile-open');
@@ -98,23 +80,20 @@ $(document).ready(function () {
         }
     });
 
-    // ── Submenu toggle ───────────────────────────────────────────
 
     $('.menu-item.has-submenu > a').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
 
-        // Jangan buka submenu saat collapsed (bukan hover-open)
         var $sidebar = $('.dashboard-sidebar');
         if (isDesktop() && $sidebar.hasClass('collapsed') && !$sidebar.hasClass('hover-open')) return;
 
         var $parent = $(this).closest('.menu-item.has-submenu');
         $parent.toggleClass('open');
-        // Tutup submenu lain
+
         $('.menu-item.has-submenu').not($parent).removeClass('open');
     });
 
-    // ── Profile dropdown ─────────────────────────────────────────
 
     $('#profileToggle').on('click', function (e) {
         e.stopPropagation();
@@ -130,7 +109,6 @@ $(document).ready(function () {
         }
     });
 
-    // Klik luar → tutup profile dropdown
     $(document).on('click', function (e) {
         if (!$(e.target).closest('.sidebar-profile').length) {
             $('#profileDropdown').removeClass('show');
@@ -174,7 +152,6 @@ $(document).ready(function () {
         });
     });
 
-    // ── Flash message auto-dismiss ────────────────────────────────
 
     $('.flash-message[data-timeout]').each(function () {
         var $msg = $(this);

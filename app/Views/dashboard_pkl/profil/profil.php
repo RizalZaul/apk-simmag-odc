@@ -1,28 +1,5 @@
 <?php
 
-/**
- * Views/dashboard_pkl/profil/profil.php
- *
- * Variables dari ProfilPklController::index():
- *   $pkl     → array dari PklModel::getDataDiri()
- *              keys: id_pkl, nama_lengkap, nama_panggilan, tempat_lahir,
- *                    tgl_lahir, no_wa_pkl, jenis_kelamin, alamat, jurusan,
- *                    role_kel_pkl, id_instansi, nama_kelompok, tgl_mulai,
- *                    tgl_akhir, status_kelompok, nama_pembimbing,
- *                    no_wa_pembimbing, nama_instansi, alamat_instansi,
- *                    kategori_instansi, kota_instansi
- *   $user    → object dari UserModel
- *   $anggota → array [['nama_lengkap'=>..., 'role_kel_pkl'=>...], ...]
- *
- * BUG-FIX: Hapus deklarasi tglFmt() & hitungDurasi() — sudah ada di
- *           tgl_helper.php yang di-autoload global (Autoload.php $helpers).
- *           tglFmt() diganti tglShortIndo(), hitungDurasi() nama sama.
- */
-
-// ── REMOVED: tglFmt() & hitungDurasi() — pakai tgl_helper.php ────────────
-// Fungsi-fungsi ini sudah tersedia global via autoload, mendefinisikan ulang
-// di sini menyebabkan "Cannot redeclare" ErrorException.
-
 $adaInstansi   = ! empty($pkl['id_instansi']);
 $namaLengkap   = esc($pkl['nama_lengkap']   ?? '');
 $namaPanggilan = esc($pkl['nama_panggilan'] ?? '');
@@ -30,7 +7,7 @@ $jenisKelamin  = $pkl['jenis_kelamin'] ?? null;
 $jkLabel       = $jenisKelamin === 'L' ? 'Laki-laki' : ($jenisKelamin === 'P' ? 'Perempuan' : '-');
 $tempat        = esc($pkl['tempat_lahir'] ?? '');
 $tglLahir      = esc($pkl['tgl_lahir']    ?? '');
-$tglLahirFmt   = tglShortIndo($pkl['tgl_lahir'] ?? null);   // ← was: tglFmt()
+$tglLahirFmt   = tglShortIndo($pkl['tgl_lahir'] ?? null);
 $noWa          = esc($pkl['no_wa_pkl']    ?? '');
 $alamat        = esc($pkl['alamat']       ?? '');
 $jurusan       = esc($pkl['jurusan']      ?? '');
@@ -86,16 +63,13 @@ $swalError   = session()->getFlashdata('swal_error');
     </script>
 <?php endif; ?>
 
-<!-- ── Welcome Card ── -->
 <div class="welcome-card">
     <h2 class="page-heading">Profil Saya</h2>
     <p class="page-subheading">Data diri dan informasi akun</p>
 </div>
 
-<!-- ══ HERO ROW: Avatar + Durasi PKL ══ -->
 <div class="profil-hero-row">
 
-    <!-- Avatar Card -->
     <div class="profil-avatar-card">
         <div class="profil-avatar-circle">
             <i class="fas fa-user-graduate"></i>
@@ -111,7 +85,6 @@ $swalError   = session()->getFlashdata('swal_error');
         </div>
     </div>
 
-    <!-- Durasi PKL Card -->
     <div class="profil-durasi-card">
         <div class="profil-durasi-header">
             <i class="fas fa-calendar-alt"></i>
@@ -142,9 +115,8 @@ $swalError   = session()->getFlashdata('swal_error');
         </div>
     </div>
 
-</div><!-- end .profil-hero-row -->
+</div>
 
-<!-- ══ SECTION: Informasi Pribadi ══ -->
 <div class="profil-section">
     <div class="profil-section-header">
         <div class="profil-section-title">
@@ -161,7 +133,6 @@ $swalError   = session()->getFlashdata('swal_error');
 
         <div class="profil-field-grid">
 
-            <!-- Nama Lengkap -->
             <div class="profil-field">
                 <label><i class="fas fa-user"></i> Nama Lengkap <span class="required-star">*</span></label>
                 <div class="profil-field-display" id="displayNamaLengkap"><?= $namaLengkap ?: '-' ?></div>
@@ -169,7 +140,6 @@ $swalError   = session()->getFlashdata('swal_error');
                     value="<?= $namaLengkap ?>" id="inputNamaLengkap" style="display:none" required>
             </div>
 
-            <!-- Nama Panggilan -->
             <div class="profil-field">
                 <label><i class="fas fa-smile"></i> Nama Panggilan <span class="required-star">*</span></label>
                 <div class="profil-field-display" id="displayNamaPanggilan"><?= $namaPanggilan ?: '-' ?></div>
@@ -177,7 +147,6 @@ $swalError   = session()->getFlashdata('swal_error');
                     value="<?= $namaPanggilan ?>" id="inputNamaPanggilan" style="display:none" required>
             </div>
 
-            <!-- Username (locked) -->
             <div class="profil-field">
                 <label>
                     <i class="fas fa-at"></i> Username
@@ -186,7 +155,6 @@ $swalError   = session()->getFlashdata('swal_error');
                 <div class="profil-field-display field-locked"><?= $username ?></div>
             </div>
 
-            <!-- Email (locked) -->
             <div class="profil-field">
                 <label>
                     <i class="fas fa-envelope"></i> Email
@@ -195,7 +163,6 @@ $swalError   = session()->getFlashdata('swal_error');
                 <div class="profil-field-display field-locked"><?= $email ?></div>
             </div>
 
-            <!-- Jenis Kelamin -->
             <div class="profil-field">
                 <label><i class="fas fa-venus-mars"></i> Jenis Kelamin <span class="required-star">*</span></label>
                 <div class="profil-field-display" id="displayJenisKelamin"><?= $jkLabel ?></div>
@@ -206,7 +173,6 @@ $swalError   = session()->getFlashdata('swal_error');
                 </select>
             </div>
 
-            <!-- No. WhatsApp -->
             <div class="profil-field">
                 <label><i class="fab fa-whatsapp"></i> No. WhatsApp <span class="required-star">*</span></label>
                 <div class="profil-field-display" id="displayNoWa"><?= $noWa ?: '-' ?></div>
@@ -214,7 +180,6 @@ $swalError   = session()->getFlashdata('swal_error');
                     value="<?= $noWa ?>" id="inputNoWa" style="display:none" required>
             </div>
 
-            <!-- Tempat Lahir -->
             <div class="profil-field">
                 <label><i class="fas fa-map-pin"></i> Tempat Lahir <span class="required-star">*</span></label>
                 <div class="profil-field-display" id="displayTempatLahir"><?= $tempat ?: '-' ?></div>
@@ -222,7 +187,6 @@ $swalError   = session()->getFlashdata('swal_error');
                     value="<?= $tempat ?>" id="inputTempatLahir" style="display:none" required>
             </div>
 
-            <!-- Tanggal Lahir (Flatpickr — altInput untuk tampil "d M Y") -->
             <div class="profil-field">
                 <label><i class="fas fa-birthday-cake"></i> Tanggal Lahir <span class="required-star">*</span></label>
                 <div class="profil-field-display" id="displayTglLahir"><?= $tglLahirFmt ?></div>
@@ -233,7 +197,6 @@ $swalError   = session()->getFlashdata('swal_error');
                 </div>
             </div>
 
-            <!-- Alamat (full width) -->
             <div class="profil-field profil-field-full">
                 <label><i class="fas fa-map-marker-alt"></i> Alamat <span class="required-star">*</span></label>
                 <div class="profil-field-display multiline" id="displayAlamat"><?= $alamat !== '' ? nl2br($alamat) : '-' ?></div>
@@ -242,7 +205,6 @@ $swalError   = session()->getFlashdata('swal_error');
             </div>
 
             <?php if ($adaInstansi): ?>
-                <!-- Jurusan (hanya tampil jika ada instansi, editable) -->
                 <div class="profil-field profil-field-full">
                     <label><i class="fas fa-graduation-cap"></i> Jurusan <span class="required-star">*</span></label>
                     <div class="profil-field-display" id="displayJurusan"><?= $jurusan ?: '-' ?></div>
@@ -250,7 +212,6 @@ $swalError   = session()->getFlashdata('swal_error');
                         value="<?= $jurusan ?>" id="inputJurusan" style="display:none" required>
                 </div>
             <?php else: ?>
-                <!-- Hidden field agar jurusan tetap terkirim (preserve value) -->
                 <input type="hidden" name="jurusan" value="<?= $jurusan ?>">
             <?php endif; ?>
 
@@ -267,7 +228,6 @@ $swalError   = session()->getFlashdata('swal_error');
     </form>
 </div>
 
-<!-- ══ SECTION: Informasi Instansi & Kelompok (hanya jika ada instansi) ══ -->
 <?php if ($adaInstansi): ?>
     <div class="profil-section">
         <div class="profil-section-header">
@@ -282,7 +242,6 @@ $swalError   = session()->getFlashdata('swal_error');
 
         <div class="profil-field-grid">
 
-            <!-- Nama Instansi -->
             <div class="profil-field">
                 <label><i class="fas fa-university"></i> Nama Instansi</label>
                 <div class="profil-field-display field-locked">
@@ -290,7 +249,6 @@ $swalError   = session()->getFlashdata('swal_error');
                 </div>
             </div>
 
-            <!-- Kota Instansi -->
             <div class="profil-field">
                 <label><i class="fas fa-city"></i> Kota</label>
                 <div class="profil-field-display field-locked">
@@ -298,7 +256,6 @@ $swalError   = session()->getFlashdata('swal_error');
                 </div>
             </div>
 
-            <!-- Alamat Instansi (full width) -->
             <div class="profil-field profil-field-full">
                 <label><i class="fas fa-map-marker-alt"></i> Alamat Instansi</label>
                 <div class="profil-field-display field-locked multiline">
@@ -306,7 +263,6 @@ $swalError   = session()->getFlashdata('swal_error');
                 </div>
             </div>
 
-            <!-- Nama Kelompok -->
             <div class="profil-field">
                 <label><i class="fas fa-users"></i> Nama Kelompok</label>
                 <div class="profil-field-display field-locked">
@@ -314,7 +270,6 @@ $swalError   = session()->getFlashdata('swal_error');
                 </div>
             </div>
 
-            <!-- Role dalam Kelompok -->
             <div class="profil-field">
                 <label>
                     <i class="fas fa-user-tag"></i> Role dalam Kelompok
@@ -327,7 +282,6 @@ $swalError   = session()->getFlashdata('swal_error');
                 </div>
             </div>
 
-            <!-- Nama Pembimbing -->
             <div class="profil-field">
                 <label><i class="fas fa-chalkboard-teacher"></i> Nama Pembimbing</label>
                 <div class="profil-field-display field-locked">
@@ -335,7 +289,6 @@ $swalError   = session()->getFlashdata('swal_error');
                 </div>
             </div>
 
-            <!-- No. WA Pembimbing -->
             <div class="profil-field">
                 <label><i class="fab fa-whatsapp"></i> No. WA Pembimbing</label>
                 <div class="profil-field-display field-locked">
@@ -343,7 +296,6 @@ $swalError   = session()->getFlashdata('swal_error');
                 </div>
             </div>
 
-            <!-- Anggota Kelompok (full width) -->
             <?php if (! empty($anggota)): ?>
                 <div class="profil-field profil-field-full">
                     <label><i class="fas fa-user-friends"></i> Anggota Kelompok</label>
@@ -365,7 +317,6 @@ $swalError   = session()->getFlashdata('swal_error');
     </div>
 <?php endif; ?>
 
-<!-- ══ SECTION: Ubah Password ══ -->
 <div class="profil-section">
     <div class="profil-section-header">
         <div class="profil-section-title">
@@ -382,7 +333,6 @@ $swalError   = session()->getFlashdata('swal_error');
 
         <div class="profil-field-grid">
 
-            <!-- Password Baru -->
             <div class="profil-field">
                 <label><i class="fas fa-key"></i> Password Baru</label>
                 <div class="profil-field-display pw-display-placeholder">
@@ -411,7 +361,6 @@ $swalError   = session()->getFlashdata('swal_error');
                 </div>
             </div>
 
-            <!-- Konfirmasi Password -->
             <div class="profil-field">
                 <label><i class="fas fa-key"></i> Konfirmasi Password</label>
                 <div class="profil-field-display pw-display-placeholder">

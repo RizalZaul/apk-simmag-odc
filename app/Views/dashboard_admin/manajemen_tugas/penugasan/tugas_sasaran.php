@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Views/dashboard_admin/manajemen_tugas/penugasan/tugas_sasaran.php
- * Wizard Step 2: Pilih Sasaran Tugas
- */
 ?>
 
 <div class="welcome-card mtugas-page-hero">
@@ -43,7 +39,6 @@
         </button>
     </div>
 
-    <!-- ════ TAB: INDIVIDU (MANDIRI) ════ -->
     <div class="mpkl-tab-content active" id="tab-mandiri">
         <div class="mtugas-search-strip">
             <div class="mtugas-filter-toolbar">
@@ -90,7 +85,6 @@
         </div>
     </div>
 
-    <!-- ════ TAB: KELOMPOK ════ -->
     <div class="mpkl-tab-content" id="tab-kelompok">
         <div class="mtugas-search-strip">
             <div class="mtugas-filter-toolbar">
@@ -121,7 +115,6 @@
         </div>
     </div>
 
-    <!-- ════ TAB: TIM TUGAS ════ -->
     <div class="mpkl-tab-content" id="tab-tim">
 
         <!-- Card Tim List -->
@@ -191,9 +184,8 @@
                     </tbody>
                 </table>
             </div>
-        </div><!-- /.tim-main-card -->
+        </div>
 
-        <!-- Form Buat Tim Baru (hidden default) -->
         <div class="buat-tim-card mtugas-buat-tim-card" id="sectionBuatTim" style="display:none;">
             <div class="buat-tim-header">
                 <i class="fas fa-plus-circle"></i> Buat Tim Tugas Baru
@@ -278,11 +270,11 @@
                 </div>
 
             </div>
-        </div><!-- /.buat-tim-card -->
+        </div>
 
-    </div><!-- /#tab-tim -->
+    </div>
 
-    <!-- ── Sticky Footer ── -->
+    
     <div class="sasaran-footer">
         <div>
             <span class="mtugas-footer-label">Total Sasaran Terpilih:</span>
@@ -293,4 +285,4 @@
         </button>
     </div>
 
-</div><!-- /.mpkl-card -->
+</div>

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Layouts/sidebar_admin.php
- * Variables: $active_menu
- */
-
 $activeMenu     = $active_menu ?? 'dashboard';
 $tugasActive    = in_array($activeMenu, ['penugasan', 'pengumpulan']);
 $panggilan      = session()->get('panggilan') ?: session()->get('nama') ?: 'Admin';
@@ -12,10 +7,8 @@ $panggilan      = session()->get('panggilan') ?: session()->get('nama') ?: 'Admi
 
 <aside class="dashboard-sidebar" id="dashboardSidebar">
 
-  <!-- ══ TOP ══ -->
   <div class="sidebar-top">
 
-    <!-- Logo -->
     <div class="sidebar-logo">
       <img src="<?= base_url('assets/images/logo.png') ?>"
         alt="OurWeb.id"
@@ -24,7 +17,6 @@ $panggilan      = session()->get('panggilan') ?: session()->get('nama') ?: 'Admi
         data-logo-small="<?= base_url('assets/images/logo_2.png') ?>">
     </div>
 
-    <!-- Navigation -->
     <ul class="sidebar-menu">
 
       <li class="menu-item <?= $activeMenu === 'dashboard' ? 'active' : '' ?>">
@@ -48,7 +40,6 @@ $panggilan      = session()->get('panggilan') ?: session()->get('nama') ?: 'Admi
         </a>
       </li>
 
-      <!-- Manajemen Tugas (submenu) -->
       <li class="menu-item has-submenu <?= $tugasActive ? 'active open' : '' ?>">
         <a href="javascript:void(0)">
           <i class="fas fa-clipboard-list icon"></i>
@@ -74,7 +65,6 @@ $panggilan      = session()->get('panggilan') ?: session()->get('nama') ?: 'Admi
     </ul>
   </div>
 
-  <!-- ══ BOTTOM / PROFILE ══ -->
   <div class="sidebar-bottom">
 
     <div class="sidebar-profile" id="profileToggle">

@@ -1,15 +1,5 @@
 <?php
 
-/**
- * Views/dashboard_pkl/modul/kategori.php
- *
- * Halaman daftar modul dalam satu kategori untuk role PKL.
- * Variables:
- *   $kategori   → array ['id_kat_m', 'nama_kat_m', ...]
- *   $modulList  → array of formatted modul rows
- */
-
-// ── Helper format datetime ──────────────────────────────────────────
 function fmtDtPklModul(?string $dt): string
 {
     if (! $dt) return '-';

@@ -1,20 +1,3 @@
-/**
- * public/assets/js/modules/admin/detail_pkl.js
- *
- * Digunakan oleh DUA halaman:
- *   1. detail_pkl.php → toggleAnggota accordion
- *   2. edit_pkl.php   → AJAX submit, flatpickr tgl lahir, toggle pw, validasi pw
- *
- * A1-FIX: Handler AJAX #formEditPkl dipindahkan ke sini (bukan tambah_pkl.js)
- * agar edit page tidak memuat tambah_pkl.js yang men-crash karena Select2
- * dipanggil pada elemen yang tidak ada di edit page.
- *
- * NEW-BUG-FIX: Validasi password sebelum AJAX — min 8 karakter,
- * huruf besar, huruf kecil, angka, simbol (sinkron dengan profil & login).
- */
-
-/* ── Accordion Anggota (Detail Page) ─────────────────────────────────── */
-
 window.toggleAnggota = function (header) {
     var body = header.nextElementSibling;
     var icon = header.querySelector('.toggle-icon');
@@ -26,7 +9,6 @@ window.toggleAnggota = function (header) {
     }
 };
 
-/* ── Inisialisasi Edit Page ───────────────────────────────────────────── */
 
 $(document).ready(function () {
 
