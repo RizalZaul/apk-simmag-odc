@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Views/dashboard_admin/manajemen_pkl/edit_pkl.php
- * Edit 1 anggota PKL — biodata + email + password (opsional)
- */
 
 $isInstansi = ! empty($kelompok['id_instansi']);
 $jk         = $pkl['jenis_kelamin'] ?? '';

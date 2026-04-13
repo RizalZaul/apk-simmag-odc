@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Views/dashboard_admin/manajemen_pkl/_tab_instansi.php
- * Variables: $isFormMode, $currentMode, $currentEditId, $editRow, $kotaList, $instansiList
- */
 ?>
 
 <!-- ── Section: Table ── -->

@@ -1,16 +1,5 @@
 <?php
 
-/**
- * app/Views/dashboard_admin/data_modul/index.php
- *
- * Variables:
- *   $kategoriList    → array kategori siap tabel
- *   $kategoriOptions → array [['id', 'nama']]
- *   $modulList       → array data modul siap view
- *   $active_tab      → 'kategori' | 'modul'
- *   $welcome_heading
- *   $welcome_subheading
- */
 
 function fmtDt(?string $dt): string
 {

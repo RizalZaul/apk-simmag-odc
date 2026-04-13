@@ -1,9 +1,3 @@
-/**
- * SIMMAG ODC — Auth / Login JS
- * public/assets/js/modules/auth.js
- * Dependency: jQuery (loaded via CDN di login.php)
- */
-
 $(function () {
     'use strict';
 
@@ -11,7 +5,6 @@ $(function () {
     const $btnLogin = $('#btnLogin');
     const $alertGlobal = $('#authAlert');
 
-    // ── Password Toggle ──────────────────────────────────────────
 
     $('#btnTogglePw').on('click', function () {
         const $input = $('#inputPassword');
@@ -26,7 +19,6 @@ $(function () {
         }
     });
 
-    // ── Show / Hide inline error ──────────────────────────────────
 
     function showFieldError($field, msg) {
         $field.addClass('is-invalid');
@@ -64,8 +56,6 @@ $(function () {
         clearFieldError($(this));
         hideAlert();
     });
-
-    // ── AJAX Submit ───────────────────────────────────────────────
 
     $form.on('submit', function (e) {
         e.preventDefault();
@@ -131,10 +121,5 @@ $(function () {
             }
         });
     });
-
-    // ── CSRF token refresh (opsional, jika CI4 CSRF aktif) ───────
-
-    // Jika pakai CSRF token di form, uncomment ini:
-    // function refreshCsrfToken() { /* fetch token baru lalu update hidden input */ }
 
 });

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Views/dashboard_admin/manajemen_pkl/index.php
- * Wrapper utama — routing ke partial berdasarkan $active_tab
- */
-
 $kotaListJson  = json_encode($kotaList ?? [], JSON_UNESCAPED_UNICODE);
 $urlBase       = base_url('admin/manajemen-pkl');
 $urlPklBase    = base_url('admin/manajemen-pkl/pkl');

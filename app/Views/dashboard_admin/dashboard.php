@@ -1,16 +1,5 @@
 <?php
 
-/**
- * dashboard_admin/dashboard.php
- *
- * Variables dari DashboardAdminController::index():
- *   $stats     → ['aktif' => int, 'selesai' => int, 'nonaktif' => int]
- *   $modulList → array of ['id', 'nama', 'total_modul', 'color', 'icon']
- *   $tugasList → array of ['id_tugas', 'nama_tugas', 'deadline',
- *                           'nama_kat_tugas', 'total_penerima', 'sudah_kumpul']
- */
-
-// ── Helper: selisih hari dari hari ini ke deadline ───────────────────────────
 function deadlineDiff(string $deadline): int
 {
     $today = strtotime(date('Y-m-d'));

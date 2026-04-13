@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Views/dashboard_admin/manajemen_tugas/penugasan/main_penugasan.php
- * Wrapper utama Manajemen Tugas -> Penugasan
- */
 
 $activeTab = $active_tab ?? 'kategori';
 ?>

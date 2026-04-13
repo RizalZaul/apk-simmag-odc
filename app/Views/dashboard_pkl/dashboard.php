@@ -1,15 +1,5 @@
 <?php
 
-/**
- * dashboard_pkl/dashboard.php
- *
- * Variables dari DashboardPklController::index():
- *   $statsT    → ['total' => int, 'selesai' => int, 'pending' => int, 'belum_dikirim' => int]
- *   $modulList → keys: id, nama, total_modul, color, icon
- *   $tugasList → keys: id_tugas, nama_tugas, deadline, nama_kat_tugas,
- *                      sudah_kumpul, ada_revisi, semua_diterima
- */
-
 $namaUser = session()->get('panggilan') ?: session()->get('nama') ?: 'PKL';
 
 function tglFormatPkl(string $date): string

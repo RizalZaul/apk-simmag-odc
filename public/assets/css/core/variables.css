@@ -1,63 +1,27 @@
-/*
- * ============================================================
- * SIMMAG ODC — CSS Variables & Global Reset
- * public/assets/css/core/variables.css
- * ============================================================
- *
- * ⚠️  HASIL ANALISIS DUPLIKAT:
- * ─────────────────────────────────────────────────────────────
- * DIHAPUS (nilai identik, tidak ada beda semantik):
- *   --text-dark  (#1e293b) → gunakan --text-primary
- *   --text-light (#64748b) → gunakan --text-muted
- *
- * DIBERI KOMENTAR CROSS-REFERENCE (nilai sama, konteks beda):
- *   --gray-200 (#e5e7eb)  ≡  --border-light
- *   --gray-300 (#d1d5db)  ≡  --border-medium
- *   --text-secondary      ≡  --secondary-light  (keduanya #334155)
- *
- * ALIAS YANG DISENGAJA (tetap dipertahankan):
- *   --white       → alias --bg-white     (#ffffff)
- *   --error       → alias --accent-red   (#ef4444)
- *   --success     → alias --status-success (#10b981)
- *
- * TIGA VARIABEL SATU NILAI (#ef4444):
- *   --accent-red, --status-danger, --error
- *   → Ketiganya dipertahankan karena berbeda konteks penggunaan
- *     (accent = UI, status = badge/label, error = form validation)
- * ============================================================
- */
-
 :root {
 
-    /* ===================== COLORS ===================== */
+    /* COLORS */
 
-    /* Primary — Teal/Green */
     --primary:          #0f766e;
     --primary-light:    #14b8a6;
     --primary-lighter:  #2dd4bf;
     --primary-dark:     #115e59;
     --primary-gradient: linear-gradient(180deg, #0f766e 0%, #0d9488 100%);
 
-    /* Secondary — Slate/Gray */
     --secondary:        #1e293b;
-    --secondary-light:  #334155;   /* ≡ --text-secondary */
+    --secondary-light:  #334155;
     --secondary-lighter:#475569;
 
-    /* Accent Colors */
     --accent-yellow:      #facc15;
     --accent-yellow-dark: #fde047;
-    --accent-red:         #ef4444;  /* ≡ --error ≡ --status-danger */
+    --accent-red:         #ef4444;
     --accent-red-dark:    #dc2626;
 
-    /* Text Colors */
     --text-primary:   #1e293b;
-    --text-secondary: #334155;     /* ≡ --secondary-light */
+    --text-secondary: #334155;
     --text-muted:     #64748b;
     --text-white:     #ffffff;
-    /* DIHAPUS: --text-dark  → pakai --text-primary  */
-    /* DIHAPUS: --text-light → pakai --text-muted    */
 
-    /* Background Colors */
     --bg-main:      #f8fafc;
     --bg-white:     #ffffff;
     --bg-gray:      #f1f5f9;
@@ -67,21 +31,18 @@
     --surface-teal-strong: #d1fae5;
     --surface-danger-soft: #fff5f5;
 
-    /* Border Colors */
-    --border-light:  #e5e7eb;   /* ≡ --gray-200 */
-    --border-medium: #d1d5db;   /* ≡ --gray-300 */
+    --border-light:  #e5e7eb;
+    --border-medium: #d1d5db;
     --border-dark:   #cbd5e1;
     --border-teal-soft:    rgba(15, 118, 110, 0.15);
     --border-teal-medium:  rgba(15, 118, 110, 0.20);
     --border-white-medium: rgba(255, 255, 255, 0.40);
 
-    /* Status Colors */
     --status-success: #10b981;
     --status-warning: #f59e0b;
     --status-danger:  #ef4444;
     --status-info:    #3b82f6;
 
-    /* Overlay */
     --overlay-light:    rgba(255, 255, 255, 0.10);
     --overlay-medium:   rgba(255, 255, 255, 0.15);
     --overlay-strong:   rgba(255, 255, 255, 0.20);
@@ -89,7 +50,7 @@
     --overlay-white-90: rgba(255, 255, 255, 0.90);
     --overlay-white-95: rgba(255, 255, 255, 0.95);
 
-    /* ===================== BUTTON PALETTE ===================== */
+    /* BUTTON PALETTE */
     --btn-secondary-bg:           #243447;
     --btn-secondary-bg-hover:     #32465e;
     --btn-secondary-border:       #243447;
@@ -100,22 +61,22 @@
     --btn-secondary-soft-text:    #334155;
     --btn-secondary-soft-hover:   #eef2f7;
 
-    /* ===================== ALIAS / SEMANTIC ===================== */
-    --white:        #ffffff;    /* alias → --bg-white      */
-    --error:        #ef4444;    /* alias → --accent-red    */
-    --success:      #10b981;    /* alias → --status-success */
+    /* ALIAS */
+    --white:        #ffffff;
+    --error:        #ef4444;
+    --success:      #10b981;
     --success-dark: #059669;
     --success-mid:  #16a34a;
 
-    /* ===================== GRAY SCALE ===================== */
+    /* GRAY SCALE */
     --gray-50:  #f9fafb;
     --gray-100: #f3f4f6;
-    --gray-200: #e5e7eb;    /* ≡ --border-light  */
-    --gray-300: #d1d5db;    /* ≡ --border-medium */
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
     --gray-400: #9ca3af;
     --gray-500: #6b7280;
 
-    /* ===================== STATUS BG/TEXT PAIRS ===================== */
+    /* STATUS BG/TEXT PAIRS */
     --status-success-bg:   #d1fae5;
     --status-success-text: #065f46;
     --status-warning-bg:   #fef3c7;
@@ -125,11 +86,11 @@
     --status-info-bg:      #dbeafe;
     --status-info-text:    #1e40af;
 
-    /* ===================== TEAL RANGE ===================== */
+    /* TEAL RANGE */
     --teal-50:  #f0fdfa;
     --teal-100: #ccfbf1;
 
-    /* ===================== PKL STAT CARD COLORS ===================== */
+    /* PKL STAT CARD */
     --stat-active-bg:       #f0fdf4;
     --stat-active-border:   #d1fae5;
     --stat-active-color:    #10b981;
@@ -140,7 +101,7 @@
     --stat-inactive-border: #fecaca;
     --stat-inactive-color:  #ef4444;
 
-    /* ===================== DASHBOARD WIDGET COLORS ===================== */
+    /* DASHBOARD WIDGET */
     --widget-teal:        #20a8a8;
     --widget-teal-light:  #17c3b2;
     --widget-green:       #1abc9c;
@@ -153,7 +114,7 @@
     --widget-purple-dark: #8e44ad;
     --widget-red:         #e74c3c;
 
-    /* ===================== TASK STATUS COLORS ===================== */
+    /* TASK STATUS */
     --task-pending-bg:    #fff3cd;
     --task-pending-text:  #856404;
     --task-progress-bg:   #d1ecf1;
@@ -163,17 +124,17 @@
     --task-done-bg:       #e2e3e5;
     --task-done-text:     #383d41;
 
-    /* ===================== SCROLLBAR ===================== */
+    /* SCROLLBAR */
     --scrollbar-track:        var(--bg-gray);
     --scrollbar-thumb:        #78c894;
     --scrollbar-thumb-hover:  #5fb87d;
     --scrollbar-thumb-active: #4da869;
 
-    /* ===================== FOCUS RING ===================== */
+    /* FOCUS RING */
     --focus-ring:        0 0 0 3px rgba(15, 118, 110, 0.10);
     --focus-ring-strong: 0 0 0 4px rgba(15, 118, 110, 0.20);
 
-    /* ===================== SHADOWS ===================== */
+    /* SHADOWS */
     --shadow-xs:    0 1px 2px rgba(0, 0, 0, 0.05);
     --shadow-sm:    0 2px 8px rgba(0, 0, 0, 0.05);
     --shadow-md:    0 4px 12px rgba(0, 0, 0, 0.10);
@@ -183,29 +144,25 @@
     --text-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.10);
     --shadow-drop:    drop-shadow(0 4px 8px rgba(0, 0, 0, 0.20));
 
-    /* ===================== TYPOGRAPHY ===================== */
+    /* TYPOGRAPHY */
     --font-family: 'Montserrat', sans-serif;
 
-    /* ===================== LAYOUT ===================== */
-    --sidebar-width:          265px;
-    --sidebar-collapsed-width: 70px;   /* Desktop collapsed (icon-only) */
-    --topbar-height:          64px;
-    --content-padding:        24px;
+    /* LAYOUT */
+    --sidebar-width:           265px;
+    --sidebar-collapsed-width:  70px;
+    --topbar-height:           64px;
+    --content-padding:         24px;
     --radius-sm:        8px;
     --radius-md:        12px;
     --radius-lg:        16px;
     --radius-xl:        20px;
     --radius-full:      9999px;
 
-    /* ===================== TRANSITIONS ===================== */
+    /* TRANSITIONS */
     --transition-fast:   all 0.15s ease;
     --transition-normal: all 0.25s ease;
     --transition-slow:   all 0.35s ease;
 }
-
-/* ============================================================
-   CSS RESET & BASE
-   ============================================================ */
 
 *,
 *::before,
@@ -271,14 +228,12 @@ table {
     width: 100%;
 }
 
-/* ── Custom Scrollbar ── */
 ::-webkit-scrollbar              { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track        { background: var(--scrollbar-track); }
 ::-webkit-scrollbar-thumb        { background: var(--scrollbar-thumb); border-radius: var(--radius-full); }
 ::-webkit-scrollbar-thumb:hover  { background: var(--scrollbar-thumb-hover); }
 ::-webkit-scrollbar-thumb:active { background: var(--scrollbar-thumb-active); }
 
-/* ── Selection ── */
 ::selection {
     background: var(--primary-light);
     color: #fff;
