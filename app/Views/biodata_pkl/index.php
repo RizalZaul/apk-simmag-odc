@@ -6,19 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Pengisian Biodata PKL — SIMMAG ODC</title>
 
-    <!-- Google Fonts: Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
-    <!-- Select2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- CSS Variables + Form CSS -->
     <link rel="stylesheet" href="<?= base_url('assets/css/core/variables.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/modules/biodata_pkl.css') ?>">
 
@@ -27,7 +22,6 @@
 
 <body class="biodata-public-body">
 
-    <!-- ── Header ── -->
     <header class="biodata-header">
         <div class="biodata-header-inner">
             <div class="biodata-brand">
@@ -40,11 +34,9 @@
         </div>
     </header>
 
-    <!-- ── Main Content ── -->
     <main class="biodata-main">
         <div class="biodata-container">
 
-            <!-- Step Indicator -->
             <div class="biodata-steps" id="biodataSteps">
                 <div class="biodata-step active" id="stepInd1">
                     <div class="step-circle">1</div>
@@ -62,7 +54,6 @@
                 </div>
             </div>
 
-            <!-- ══ STEP 1: Data PKL ══ -->
             <div class="biodata-panel active" id="panel1">
                 <div class="biodata-card">
                     <div class="biodata-card-header">
@@ -76,7 +67,6 @@
 
                     <div class="biodata-form-body">
 
-                        <!-- Kategori PKL -->
                         <div class="biodata-field biodata-field-full">
                             <label class="biodata-label">
                                 <i class="fas fa-tags"></i> Kategori PKL <span class="required-star">*</span>
@@ -97,7 +87,6 @@
                             </div>
                         </div>
 
-                        <!-- Field Instansi (muncul jika pilih instansi) -->
                         <div id="bFieldInstansiGroup" style="display:none" class="biodata-instansi-group">
 
                             <div class="biodata-field">
@@ -124,7 +113,6 @@
                                 </span>
                             </div>
 
-                            <!-- Instansi baru -->
                             <div id="bFieldAlamatBaru" style="display:none" class="biodata-field biodata-field-full">
                                 <label class="biodata-label">
                                     <i class="fas fa-map-marker-alt"></i> Alamat Instansi Baru <span class="required-star">*</span>
@@ -179,9 +167,8 @@
                                     placeholder="Contoh: Tim ODC 2026" maxlength="20">
                             </div>
 
-                        </div><!-- end instansi group -->
+                        </div>
 
-                        <!-- Tanggal -->
                         <div class="biodata-field">
                             <label class="biodata-label">
                                 <i class="fas fa-calendar-alt"></i> Tanggal Mulai PKL <span class="required-star">*</span>
@@ -200,7 +187,7 @@
                                 placeholder="Pilih tanggal">
                         </div>
 
-                    </div><!-- end form-body -->
+                    </div>
                 </div>
 
                 <div class="biodata-footer">
@@ -209,9 +196,8 @@
                         Lanjut ke Biodata <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
-            </div><!-- end panel1 -->
+            </div>
 
-            <!-- ══ STEP 2: Biodata Anggota ══ -->
             <div class="biodata-panel" id="panel2" style="display:none">
                 <div class="biodata-card">
                     <div class="biodata-card-header">
@@ -222,7 +208,6 @@
                         </div>
                     </div>
                     <div class="biodata-card-divider"></div>
-                    <!-- Accordion anggota di-generate oleh JS -->
                     <div id="biodataAccordion"></div>
                 </div>
 
@@ -234,12 +219,10 @@
                         Lanjut ke Konfirmasi <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
-            </div><!-- end panel2 -->
+            </div>
 
-            <!-- ══ STEP 3: Konfirmasi + OTP ══ -->
             <div class="biodata-panel" id="panel3" style="display:none">
 
-                <!-- Preview data -->
                 <div class="biodata-card">
                     <div class="biodata-card-header">
                         <i class="fas fa-clipboard-check" style="color:var(--status-success)"></i>
@@ -252,7 +235,6 @@
                     <div id="konfirmasiContent"></div>
                 </div>
 
-                <!-- OTP Verification Card -->
                 <div class="biodata-card biodata-otp-card" id="otpCard">
                     <div class="biodata-card-header">
                         <i class="fas fa-shield-alt" style="color:var(--status-info)"></i>
@@ -272,14 +254,12 @@
                             </div>
                         </div>
 
-                        <!-- Step A: Send OTP -->
                         <div id="otpStepSend" class="otp-step">
                             <button type="button" class="btn-otp-send" id="btnKirimOtp">
                                 <i class="fas fa-paper-plane"></i> Kirim OTP ke Email
                             </button>
                         </div>
 
-                        <!-- Step B: Verify OTP -->
                         <div id="otpStepVerify" class="otp-step" style="display:none">
                             <div class="otp-sent-notice">
                                 <i class="fas fa-check-circle"></i>
@@ -305,13 +285,12 @@
                             </div>
                         </div>
 
-                        <!-- Step C: Verified -->
                         <div id="otpStepDone" class="otp-step otp-verified" style="display:none">
                             <i class="fas fa-check-circle"></i>
                             <span>Email berhasil diverifikasi!</span>
                         </div>
                     </div>
-                </div><!-- end otp card -->
+                </div>
 
                 <div class="biodata-footer">
                     <button type="button" class="btn-biodata-back" id="btnStep3Back">
@@ -321,17 +300,15 @@
                         <i class="fas fa-save"></i> Simpan Pendaftaran
                     </button>
                 </div>
-            </div><!-- end panel3 -->
+            </div>
 
-        </div><!-- end container -->
+        </div>
     </main>
 
-    <!-- ── Footer ── -->
     <footer class="biodata-public-footer">
         <span>© SIMMAG ODC — PT Our Digital Creative</span>
     </footer>
 
-    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

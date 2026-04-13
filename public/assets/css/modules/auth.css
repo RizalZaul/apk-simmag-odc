@@ -1,31 +1,15 @@
-/*
- * ============================================================
- * SIMMAG ODC — Auth / Login Page Styles
- * public/assets/css/modules/auth.css
- * ============================================================
- */
-
-/* ── Wrapper ── */
 .auth-wrapper {
     min-height: 100vh;
     display: flex;
-    /* FIX: align-items:flex-start agar auth-right tidak di-stretch
-       melebihi tinggi card. Ruang kosong putih di bawah card hilang. */
     align-items: flex-start;
     font-family: var(--font-family);
     overflow: hidden;
 }
 
-/* ============================================================
-   LEFT PANEL — Brand / Info
-   ============================================================ */
-
 .auth-left {
     flex: 0 0 46%;
     position: sticky;
     top: 0;
-    /* FIX: min-height:100vh agar panel kiri selalu memenuhi layar
-       meski konten panel kanan pendek */
     min-height: 100vh;
     align-self: stretch;
     background:
@@ -44,7 +28,6 @@
     overflow: hidden;
 }
 
-/* Dekoratif lingkaran di background */
 .auth-left::before {
     content: '';
     position: absolute;
@@ -78,7 +61,6 @@
     z-index: 1;
 }
 
-/* Bug1-FIX: hapus circle container, logo tampil polos tanpa border/background */
 .auth-brand-logo {
     display: flex;
     align-items: center;
@@ -168,10 +150,6 @@
     color: rgba(255,255,255,0.90);
 }
 
-/* ============================================================
-   RIGHT PANEL — Login Form
-   ============================================================ */
-
 .auth-right {
     flex: 1;
     display: flex;
@@ -179,8 +157,6 @@
     justify-content: center;
     background: var(--bg-gray);
     padding: 40px 32px;
-    /* FIX: min-height:100vh agar background gray memenuhi layar,
-       tapi konten (card) tidak dipaksa stretch ke bawah */
     min-height: 100vh;
     overflow-y: auto;
 }
@@ -196,7 +172,6 @@
     overflow: hidden;
 }
 
-/* Top accent line */
 .auth-card::before {
     content: '';
     position: absolute;
@@ -224,7 +199,6 @@
     color: var(--text-muted);
 }
 
-/* ── Form ── */
 .auth-form { display: flex; flex-direction: column; gap: 18px; }
 
 .form-group {
@@ -286,7 +260,6 @@
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.10);
 }
 
-/* Password toggle */
 .btn-toggle-pw {
     position: absolute;
     right: 12px;
@@ -302,7 +275,6 @@
 
 .btn-toggle-pw:hover { color: var(--primary); }
 
-/* ── Error Message ── */
 .form-error {
     font-size: 12px;
     color: var(--error);
@@ -310,9 +282,6 @@
     align-items: center;
     gap: 5px;
     margin-top: 2px;
-    /* Bug1-FIX: height:0 + overflow:hidden saat tidak visible agar tidak
-       ambil ruang dan tidak menambah gap antar form field.
-       Hanya pakai opacity+height transition, bukan min-height. */
     height: 0;
     overflow: hidden;
     opacity: 0;
@@ -324,7 +293,6 @@
     opacity: 1;
 }
 
-/* Bug4-FIX: override Chrome autofill styling */
 .form-control:-webkit-autofill,
 .form-control:-webkit-autofill:hover,
 .form-control:-webkit-autofill:focus,
@@ -335,7 +303,6 @@
     caret-color: var(--text-primary);
 }
 
-/* ── Lupa Password ── */
 .auth-forgot {
     text-align: right;
     margin-top: -8px;
@@ -353,7 +320,6 @@
     text-decoration: underline;
 }
 
-/* ── Alert (global) ── */
 .auth-alert {
     display: flex;
     align-items: flex-start;
@@ -385,7 +351,6 @@
     border-left: 3px solid var(--success);
 }
 
-/* ── Submit Button ── */
 .btn-login {
     display: flex;
     align-items: center;
@@ -436,7 +401,6 @@
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── Footer ── */
 .auth-card-footer {
     margin-top: 24px;
     padding-top: 18px;
@@ -451,11 +415,6 @@
     font-weight: 600;
 }
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-
-/* Mobile logo — hanya muncul di mobile (≤899px) */
 .auth-mobile-logo {
     display: none;
     flex-direction: column;
@@ -464,7 +423,6 @@
 }
 
 .auth-mobile-logo img {
-    /* width: 80px; */
     height: auto;
     object-fit: contain;
     display: block;
@@ -481,7 +439,6 @@
 @media (max-width: 899.98px) {
     .auth-left { display: none; }
 
-    /* Tampilkan logo mobile di atas card */
     .auth-mobile-logo { display: flex; }
 
     .auth-right {
@@ -490,7 +447,6 @@
         padding-top: 40px;
     }
 
-    /* Bungkus card + logo dalam satu kolom */
     .auth-right-inner {
         display: flex;
         flex-direction: column;
@@ -508,10 +464,6 @@
     .auth-greeting { font-size: 20px; }
     .auth-mobile-logo img { width: 125px; }
 }
-
-/* ============================================================
-   FORGOT PASSWORD
-   ============================================================ */
 
 .auth-card-wide {
     max-width: 520px;

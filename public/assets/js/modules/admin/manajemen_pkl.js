@@ -1,16 +1,3 @@
-/**
- * SIMMAG ODC — Manajemen PKL Admin JS
- * public/assets/js/modules/admin/manajemen_pkl.js
- *
- * Fitur:
- *   1. Tab switching (Data Instansi | Data PKL) + update breadcrumb H1
- *   2. Section switching (tabel ↔ filter ↔ form)
- *   3. DataTables dengan Responsive extension + custom filter
- *   4. Select2 + tags untuk field kota
- *   5. AJAX: store, update, delete instansi
- *   6. SweetAlert konfirmasi delete
- */
-
 var mpklPklTableIds = ['tabel-aktif', 'tabel-aktif-selesai', 'tabel-aktif-nonaktif'];
 
 function mpklEscapeRegex(value) {

@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Views/dashboard_admin/manajemen_tugas/penugasan/_tab_tugas.php
- */
 ?>
 
 <div class="mpkl-card">
@@ -16,7 +13,6 @@
         </button>
     </div>
 
-    <!-- ── Filter Panel ── -->
     <div class="mpkl-filter-panel" id="filterPanelTugas" style="display:none">
         <div class="filter-panel-header">
             <span><i class="fas fa-filter"></i> Filter Data Tugas</span>
@@ -43,7 +39,6 @@
         </div>
     </div>
 
-    <!-- ── Table (tanpa DT built-in search — pakai filter panel di atas) ── -->
     <div class="mpkl-table-wrap">
         <table class="mpkl-table tugas-table mtugas-full-table" id="tableTugas">
             <thead>

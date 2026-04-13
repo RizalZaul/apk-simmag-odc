@@ -1,12 +1,3 @@
-/**
- * SIMMAG ODC - Data Modul Admin JS
- * Dependency:
- *   - jQuery 3.x
- *   - DataTables 1.13.x + Responsive 2.5.x
- *   - SweetAlert2
- *   - Select2 4.x
- */
-
 $(document).ready(function () {
 
     var elHeaderTitle = document.querySelector('.page-title');

@@ -1,8 +1,3 @@
-/**
- * SIMMAG ODC — Penugasan Admin JS
- * public/assets/js/modules/admin/penugasan.js
- */
-
 $(document).ready(function () {
     var cfg = window.MTUGAS || {};
     var tabMeta = {

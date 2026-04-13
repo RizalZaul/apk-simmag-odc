@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Views/dashboard_admin/manajemen_tugas/penugasan/tugas_tambah.php
- * Wizard Step 1: Ketentuan Tugas
- */
 ?>
 
 <div class="welcome-card mtugas-page-hero">

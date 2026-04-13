@@ -1,8 +1,3 @@
-/**
- * SIMMAG ODC — Tambah Tugas (Step 1) JS
- * public/assets/js/modules/admin/tambah_tugas.js
- */
-
 $(document).ready(function () {
     if (window.SimmagValidation && typeof window.SimmagValidation.applyInputRules === 'function') {
         window.SimmagValidation.applyInputRules([
@@ -31,9 +26,6 @@ $(document).ready(function () {
         });
     }
 
-    // ── 1. Inisialisasi Flatpickr ────────────────────────────────
-    // dateFormat (value internal) : Y-m-d H:i  → dipakai strtotime() di server
-    // altInput + altFormat         : H:i — d M Y → tampilan ke user
     if ($('#tugasDeadline').length) {
         flatpickr('#tugasDeadline', {
             enableTime: true,
@@ -55,7 +47,6 @@ $(document).ready(function () {
         });
     }
 
-    // ── 2. Validasi & Lanjut ke Pilih Sasaran ───────────────────
     $('#btnNextSasaran').on('click', function () {
         var idKategori = $('#tugasKategori').val();
         var mode = $('#tugasKategori').find(':selected').data('mode');
@@ -102,7 +93,6 @@ $(document).ready(function () {
         window.location.href = window.BASE_URL_TUGAS + '/tugas/pilih-sasaran';
     });
 
-    // ── 3. Restore data jika user kembali dari Step 2 ───────────
     var savedData = sessionStorage.getItem('tugasFormData');
     if (savedData) {
         try {

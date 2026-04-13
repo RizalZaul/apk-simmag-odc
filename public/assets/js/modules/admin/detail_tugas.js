@@ -1,7 +1,3 @@
-/**
- * SIMMAG ODC - Detail / Ubah Tugas Admin JS
- */
-
 $(document).ready(function () {
     if (window.SimmagValidation && typeof window.SimmagValidation.applyInputRules === 'function') {
         window.SimmagValidation.applyInputRules([

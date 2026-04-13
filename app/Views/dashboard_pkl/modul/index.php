@@ -1,14 +1,5 @@
 <?php
 
-/**
- * Views/dashboard_pkl/modul/index.php
- *
- * Halaman daftar kategori modul untuk role PKL.
- * Variables:
- *   $kategoriList  → array of ['id', 'nama_kategori', 'jumlah_modul',
- *                              'tgl_dibuat', 'tgl_diubah', 'color', 'icon']
- *   $swal_error    → flash error message
- */
 ?>
 
 <?php if ($swal_error ?? null): ?>

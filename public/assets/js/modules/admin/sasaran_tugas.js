@@ -1,8 +1,3 @@
-/**
- * SIMMAG ODC — Pilih Sasaran Tugas (Step 2) JS
- * public/assets/js/modules/admin/sasaran_tugas.js
- */
-
 $(document).ready(function () {
     if (window.SimmagValidation && typeof window.SimmagValidation.applyInputRules === 'function') {
         window.SimmagValidation.applyInputRules([

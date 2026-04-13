@@ -1,16 +1,5 @@
 <?php
 
-/**
- * Layouts/header.php
- * Variables: $page_title, $page_title_sub (optional)
- *
- * Breadcrumb mode (jika $page_title_sub diset):
- *   Desktop : "Manajemen PKL / Data Instansi"
- *   Mobile  : "Data Instansi" (title-main + title-sep disembunyikan via CSS)
- *
- * Normal mode (tanpa $page_title_sub):
- *   Semua ukuran: "Dashboard" / "Profil Saya" / dll
- */
 ?>
 <header class="dashboard-header">
     <div class="header-left">

@@ -1,7 +1,3 @@
-/**
- * SIMMAG ODC - Pengumpulan Tugas Admin JS
- */
-
 $(document).ready(function () {
     var tabMeta = {
         mandiri: 'Tugas Mandiri',
