@@ -430,7 +430,17 @@ class MPklAdminController extends BaseController
         $isKetua    = $pklRow['role_kel_pkl'] === 'ketua';
         $db         = \Config\Database::connect();
 
+        $punya_tugas = $db->table('tugas_sasaran')
+            ->where('id_pkl', $idPkl)
+            ->countAllResults();
+
+        if ($punya_tugas > 0) {
+            return $this->jsonError('PKL ini masih memiliki tugas, tidak bisa dihapus.', 422);
+        }
+
+
         $db->transStart();
+        $db->transException(true);
         try {
             $affectedTimIds = [];
 
